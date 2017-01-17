@@ -8,7 +8,7 @@ there's the combat phase where monsters spawn and try to attack some sort of obj
 - [ ] Concept Brief
 - [ ] UML diagram 
 
-### Final Product X/5
+#### Final Product X/5
 - [x] Makes use of an inherited abstract class
 - [ ] Makes use of a list or array of objects
 - [ ] Appropriate internal documentation
