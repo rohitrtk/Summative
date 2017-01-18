@@ -1,0 +1,12 @@
+# Concept Brief
+
+Creating a 3D tower defense game, similiar to that of Dungeon Defenders. Player will be allowed to roam around a map, looking for chests 
+which contain MP, MP is used by the player to construct towers (Hopefully upgrade and repair too). The player runs up to the crystal and
+pressed a key which will initiate the combat phase, whilst the combat phase os active, a series of monsters will spawn who will attempt
+to destroy the crystal.
+
+## Outline for first version
+Player who can spawn in a turret
+Initiate a combat phase
+Monsters who will attack the crystal
+A spicy UI/HUD
