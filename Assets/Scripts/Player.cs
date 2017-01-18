@@ -44,9 +44,4 @@ public class Player : AbstractPlayer
     {
         base.FixedUpdate();
     }
-
-    public void OnCollisionEnter(Collision collision)
-    {
-        if (collision.gameObject.name == "Level") Debug.Log("HIT");
-    }
 }
