@@ -5,13 +5,13 @@ there's the combat phase where monsters spawn and try to attack some sort of obj
 
 ### Requirements
 #### Planning X/0
-- [ ] Concept Brief
+- [x] Concept Brief
 - [ ] UML diagram 
 
 #### Final Product X/5
 - [x] Makes use of an inherited abstract class
 - [ ] Makes use of a list or array of objects
-- [ ] Appropriate internal documentation
+- [x] Appropriate internal documentation
 - [ ] Be a complete program of appropriate complexity
 - [ ] Meets or exceeds the scope set by the concept brief
 
@@ -26,7 +26,7 @@ there's the combat phase where monsters spawn and try to attack some sort of obj
 - [ ] AI
 - [ ] Networking
 - [ ] Sound
-- [ ] Completely new project
-- [ ] New models
+- [x] Completely new project
+- [x] New models
 - [ ] Complicated data structures
 - [ ] Magical items of an impressive quality
