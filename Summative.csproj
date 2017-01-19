@@ -104,12 +104,18 @@
     <Compile Include="Assets\Imports\UnityChan\Scripts\SceneLoader.cs" />
     <Compile Include="Assets\Imports\UnityChan\Scripts\ThirdPersonCamera.cs" />
     <Compile Include="Assets\Imports\UnityChan\Scripts\UnityChanControlScriptWithRgidBody.cs" />
-    <Compile Include="Assets\Scripts\AbstractPlayer.cs" />
-    <Compile Include="Assets\Scripts\AbstractTower.cs" />
-    <Compile Include="Assets\Scripts\Managers\AbstractGameManager.cs" />
+    <Compile Include="Assets\Scripts\Abstract Scripts\AbstractGameManager.cs" />
+    <Compile Include="Assets\Scripts\Abstract Scripts\AbstractPlayer.cs" />
+    <Compile Include="Assets\Scripts\Abstract Scripts\AbstractTower.cs" />
+    <Compile Include="Assets\Scripts\EnemySpawner.cs" />
     <Compile Include="Assets\Scripts\Managers\Level1Manager.cs" />
-    <Compile Include="Assets\Scripts\Managers\SetupLocalPlayer.cs" />
-    <Compile Include="Assets\Scripts\Player.cs" />
+    <Compile Include="Assets\Scripts\Managers\MenuManager.cs" />
+    <Compile Include="Assets\Scripts\Player\Player.cs" />
+    <Compile Include="Assets\Scripts\Player\PlayerHealth.cs" />
+    <Compile Include="Assets\Scripts\Player\PlayerMP.cs" />
+    <Compile Include="Assets\Scripts\Player\PlayerPhase.cs" />
+    <Compile Include="Assets\Scripts\Player\PlayerRoundNumber.cs" />
+    <Compile Include="Assets\Scripts\Player\SetupLocalPlayer.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\Imports\Standard Assets\Environment\Water\Water\Shaders\FXWaterPro.shader" />
