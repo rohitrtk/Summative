@@ -1,7 +1,7 @@
 # Summative
 |2017| My final project for Grade 12 Computer Science. Going for a Dungeon Defenders style game, you have a build phase, 
 where the player goes around the map collecting some sort of currency and using that currency, has to set up defences, then
-there's the combat phase where monsters spawn and try to attack some sort of object on the map.
+there's the combat phase where monsters spawn and try to attack some sort of object on the map. Read the CONCEPT file for the Concept Brief.
 
 ### Requirements
 #### Planning X/0
