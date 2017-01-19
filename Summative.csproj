@@ -114,6 +114,7 @@
     <Compile Include="Assets\Scripts\Player\PlayerHealth.cs" />
     <Compile Include="Assets\Scripts\Player\PlayerMP.cs" />
     <Compile Include="Assets\Scripts\Player\PlayerPhase.cs" />
+    <Compile Include="Assets\Scripts\Player\PlayerRoundNumber.cs" />
     <Compile Include="Assets\Scripts\Player\SetupLocalPlayer.cs" />
   </ItemGroup>
   <ItemGroup>

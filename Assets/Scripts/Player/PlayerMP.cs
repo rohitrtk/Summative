@@ -7,8 +7,18 @@ using UnityEngine;
 public class PlayerMP : MonoBehaviour
 {
     [SerializeField] private Text t;        // Text object to write to
+    [SerializeField] private float _baseMp;
     private float _mp;                      // Players MP
     private const string _MP = "MP: ";      // Const string for UI
+
+    /// <summary>
+    /// Called by Unity for object init
+    /// </summary>
+    public void Start()
+    {
+        SetMP(_baseMp);
+        LoseMP(0f);
+    }
 
     /// <summary>
     /// Called when player loses MP
@@ -18,7 +28,7 @@ public class PlayerMP : MonoBehaviour
     {
         _mp -= lossOfMP;
 
-        t.text = _MP + _mp.ToString();
+        UpdateGUI();
     }
 
     /// <summary>
@@ -28,6 +38,7 @@ public class PlayerMP : MonoBehaviour
     public void SetMP(float mp)
     {
         _mp = mp;
+        UpdateGUI();
     }
 
     /// <summary>
@@ -37,5 +48,13 @@ public class PlayerMP : MonoBehaviour
     public float GetMP()
     {
         return _mp;
+    }
+
+    /// <summary>
+    /// Called to update the players MP HUD
+    /// </summary>
+    public void UpdateGUI()
+    {
+        t.text = _MP + _mp.ToString();
     }
 }

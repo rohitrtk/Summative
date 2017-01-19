@@ -9,6 +9,8 @@ public abstract class AbstractPlayer : MonoBehaviour {
     protected Rigidbody _rb;            // Players rigidbody
     protected PlayerHealth _ph;         // Players health object
     protected PlayerMP _pm;             // Players mana object
+    protected PlayerPhase _pp;          // Players phase object
+    protected PlayerRoundNumber _prn;   // Players round number object
 
     //private float _hp { set; get; }             // Players HP                         
     //private float _mp { set; get; }             // Players MP
@@ -16,12 +18,15 @@ public abstract class AbstractPlayer : MonoBehaviour {
     protected float _moveSpeed = 2f;            // Players current movespeed
     protected float _runSpeed = 4f;             // Players run speed
     protected float _turnSpeed = 4f;            // Players turn speed
-    protected string _inputHorizontalAxis = "Horizontal";   // Players x axis
-    protected string _inputVerticalAxis = "Vertical";       // Players z axis
+    protected string _inputHorizontalAxis = "Horizontal";   // Players x axis input
+    protected string _inputVerticalAxis = "Vertical";       // Players z axis input
     protected float _inputHorizontal;           // Input on x axis
     protected float _inputVertical;             // Input on z axis
     protected bool _run;                        // Is this player running?
     protected bool _jump;                       // Is this player jumping?
+
+    // Level1Manager object
+    protected Level1Manager _gm;
 
     /// <summary>
     /// Called by Unity (More less a constructor)
@@ -32,11 +37,9 @@ public abstract class AbstractPlayer : MonoBehaviour {
         _rb = GetComponent<Rigidbody>();
         _ph = GetComponent<PlayerHealth>();
         _pm = GetComponent<PlayerMP>();
-
-        _ph.SetHealth(100);
-        _ph.TakeDamage(0);
-        _pm.SetMP(100);
-        _pm.LoseMP(0);
+        _pp = GetComponent<PlayerPhase>();
+        _prn = GetComponent<PlayerRoundNumber>();
+        _gm = GameObject.Find("Level1Manager").GetComponent<Level1Manager>();
 
         //_mp = _pm.GetMP();
         //_hp = _ph.GetHealth();
@@ -57,6 +60,9 @@ public abstract class AbstractPlayer : MonoBehaviour {
         else _jump = false;
 
         SetAnimations();
+
+        if(!(_pp.GetCurrentPhase() == _gm.GetPhase()))_pp.SetCurrentPhase(_gm.GetPhase());
+        if(!(_prn.GetRoundNumber() == _gm.GetRound()))_prn.SetRoundNumber(_gm.GetRound());
     }
 
     /// <summary>

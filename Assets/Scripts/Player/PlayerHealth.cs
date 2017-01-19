@@ -7,9 +7,19 @@ using UnityEngine;
 public class PlayerHealth : MonoBehaviour {
 
     [SerializeField] private Text t;            // Text object to write to
+    [SerializeField] public float _baseHealth;
     private float _health;                      // Players health
     private const string _HEALTH = "Health: ";  // Const string for UI
     private bool _isDead;                       // Is this player dead?
+
+    /// <summary>
+    /// Called by Unity for object init
+    /// </summary>
+    public void Start()
+    {
+        SetHealth(_baseHealth);
+        TakeDamage(0f);
+    }
 
     /// <summary>
     /// Called when the player takes damage
@@ -24,7 +34,7 @@ public class PlayerHealth : MonoBehaviour {
             _isDead = false;
             _health = 0f;
         }
-        t.text = _HEALTH + _health.ToString();
+        UpdateGUI();
     }
 
     /// <summary>
@@ -34,6 +44,7 @@ public class PlayerHealth : MonoBehaviour {
     public void SetHealth(float health)
     {
         _health = health;
+        UpdateGUI();
     }
 
     /// <summary>
@@ -43,5 +54,10 @@ public class PlayerHealth : MonoBehaviour {
     public float GetHealth()
     {
         return _health;
+    }
+
+    public void UpdateGUI()
+    {
+        t.text = _HEALTH + _health.ToString();
     }
 }
