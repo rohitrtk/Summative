@@ -4,14 +4,19 @@ using UnityEngine;
 
 public class Level1Manager : AbstractGameManager {
 
-	// Use this for initialization
-	void Start ()
+    GameObject g;
+
+	public override void Start ()
     {
-		
+        g = GameObject.Find("Player");
+
+        base.Start();
+
+        // Work on sending build bool to HUD
 	}
 	
-	// Update is called once per frame
-	void Update () {
+	public override void Update ()
+    {
 		
 	}
 }
