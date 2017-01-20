@@ -7,6 +7,11 @@ using UnityEngine;
 /// </summary>
 public class AbstractGameManager : MonoBehaviour {
 
+    // Players
+    [SerializeField] protected Player _player;
+    [SerializeField] protected Transform _playerSpawn;
+    protected Player _playerInstance;
+
     // Housekeeping
     protected bool _combatPhase;    // Current phase | combat vs build
     protected int _roundNumber;     // Current round number
@@ -37,6 +42,10 @@ public class AbstractGameManager : MonoBehaviour {
     /// </summary>
     public virtual void Start ()
     {
+        _playerInstance = Instantiate(_player, _playerSpawn.position, _playerSpawn.rotation);
+        GameObject.Find("Main Camera").GetComponent<Camera>().gameObject.SetActive(false);
+        _playerInstance.GetComponentInChildren<Camera>().enabled = true;
+
         _crystalInstance = Instantiate(_crystalPrefab, _crystalSpawn.position, _crystalSpawn.rotation);
         _timer = BuildPhaseTime;
         SpawnChests();
