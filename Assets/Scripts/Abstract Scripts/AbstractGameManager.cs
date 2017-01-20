@@ -21,6 +21,9 @@ public class AbstractGameManager : MonoBehaviour {
     [SerializeField] protected int _numOfChests;        // Number of chests on map
 
     // Prefabs
+    [SerializeField] protected GameObject _crystalPrefab;
+    [SerializeField] protected Transform _crystalSpawn;             // Spawn point for the crystal
+                     protected GameObject _crystalInstance;         // Instance of the crystal
     [SerializeField] protected GameObject _chestInstance;           // Instance of the chest
     [SerializeField] protected GameObject[] _chestSpawns;           // Array of spawns for chest
 
@@ -34,6 +37,7 @@ public class AbstractGameManager : MonoBehaviour {
     /// </summary>
     public virtual void Start ()
     {
+        _crystalInstance = Instantiate(_crystalPrefab, _crystalSpawn.position, _crystalSpawn.rotation);
         _timer = BuildPhaseTime;
         SpawnChests();
         _roundNumber = 0;

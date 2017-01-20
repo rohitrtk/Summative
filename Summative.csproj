@@ -107,6 +107,7 @@
     <Compile Include="Assets\Scripts\Abstract Scripts\AbstractGameManager.cs" />
     <Compile Include="Assets\Scripts\Abstract Scripts\AbstractPlayer.cs" />
     <Compile Include="Assets\Scripts\Abstract Scripts\AbstractTower.cs" />
+    <Compile Include="Assets\Scripts\CrystalManager.cs" />
     <Compile Include="Assets\Scripts\EnemySpawner.cs" />
     <Compile Include="Assets\Scripts\Managers\Level1Manager.cs" />
     <Compile Include="Assets\Scripts\Managers\MenuManager.cs" />
