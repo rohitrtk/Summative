@@ -9,4 +9,14 @@ public class MenuManager : MonoBehaviour {
     {
         SceneManager.LoadScene(level);
     }
+
+    public void LoadOptions()
+    {
+        Debug.Log("Options");
+    }
+
+    public void Exit()
+    {
+        Application.Quit();
+    }
 }

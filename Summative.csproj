@@ -104,11 +104,17 @@
     <Compile Include="Assets\Imports\UnityChan\Scripts\SceneLoader.cs" />
     <Compile Include="Assets\Imports\UnityChan\Scripts\ThirdPersonCamera.cs" />
     <Compile Include="Assets\Imports\UnityChan\Scripts\UnityChanControlScriptWithRgidBody.cs" />
+    <Compile Include="Assets\Scripts\Abstract Scripts\AbstractBullet.cs" />
     <Compile Include="Assets\Scripts\Abstract Scripts\AbstractGameManager.cs" />
     <Compile Include="Assets\Scripts\Abstract Scripts\AbstractPlayer.cs" />
     <Compile Include="Assets\Scripts\Abstract Scripts\AbstractTower.cs" />
+    <Compile Include="Assets\Scripts\BasicBullet.cs" />
+    <Compile Include="Assets\Scripts\BasicTower.cs" />
+    <Compile Include="Assets\Scripts\Chest.cs" />
+    <Compile Include="Assets\Scripts\ChestSpawner.cs" />
     <Compile Include="Assets\Scripts\CrystalManager.cs" />
     <Compile Include="Assets\Scripts\EnemySpawner.cs" />
+    <Compile Include="Assets\Scripts\MPScript.cs" />
     <Compile Include="Assets\Scripts\Managers\Level1Manager.cs" />
     <Compile Include="Assets\Scripts\Managers\MenuManager.cs" />
     <Compile Include="Assets\Scripts\Player\Player.cs" />
