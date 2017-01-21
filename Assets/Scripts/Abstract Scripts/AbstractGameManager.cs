@@ -21,6 +21,7 @@ public class AbstractGameManager : MonoBehaviour {
     [SerializeField] protected int _numEnemies;                    // Number of enemies to spawn
     protected List<GameObject> _enemies;                           // List of enemies to be spawned
     protected enum Difficulty { Easy = 1, Normal = 5, Hard = 10 }  // Difficulty level of level
+    protected EnemySpawner _es;
 
     // Chests
     [SerializeField] protected int _numOfChests;        // Number of chests on map
@@ -46,7 +47,14 @@ public class AbstractGameManager : MonoBehaviour {
         GameObject.Find("Main Camera").GetComponent<Camera>().gameObject.SetActive(false);
         _playerInstance.GetComponentInChildren<Camera>().enabled = true;
 
+
         _crystalInstance = Instantiate(_crystalPrefab, _crystalSpawn.position, _crystalSpawn.rotation);
+        _es = GetComponentInChildren<EnemySpawner>();
+        foreach(AbstractEnemy e in _es.Enemies)
+        {
+            e.SetTargetTransform(_crystalInstance.transform);
+        }
+
         _timer = BuildPhaseTime;
         SpawnChests();
         _roundNumber = 0;
