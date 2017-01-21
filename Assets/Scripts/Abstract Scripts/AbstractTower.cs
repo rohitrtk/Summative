@@ -44,8 +44,6 @@ public class AbstractTower : MonoBehaviour {
                         rotationToTarget, 100f, 0.0f);
                     
                     transform.GetChild(3).rotation = Quaternion.LookRotation(direction);
-                    //transform.rotation = 
-
 
                     LaunchProjectile();
 

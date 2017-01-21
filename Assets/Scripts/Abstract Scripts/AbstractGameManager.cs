@@ -149,4 +149,9 @@ public class AbstractGameManager : MonoBehaviour {
     {
         return _roundNumber;
     }
+
+    public Player GetPlayer()
+    {
+        return _player;
+    }
 }

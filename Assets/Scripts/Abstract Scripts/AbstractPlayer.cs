@@ -93,6 +93,16 @@ public abstract class AbstractPlayer : MonoBehaviour {
         _rb.MoveRotation(_rb.rotation * turnRotation);
     }
 
+    public virtual void OnTriggerEnter(Collider collision)
+    {
+        if (collision.gameObject.layer == 9)
+        {
+            Chest c = collision.gameObject.GetComponent<Chest>();
+            _pm.SetMP(_pm.GetMP() + c.GetAmountOfMp());
+            c.gameObject.SetActive(false);
+        }
+    }
+
     /// <summary>
     /// Called to set the animation variables
     /// </summary>
