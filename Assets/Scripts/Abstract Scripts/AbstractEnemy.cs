@@ -1,6 +1,6 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using System;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -10,17 +10,18 @@ public abstract class AbstractEnemy : MonoBehaviour {
     private NavMeshAgent _nma;                      // Navmeshagent component
 
     private List<Transform> _nodes;                 // List of nodes                 
-    private int _currentNode;                       // Last known node to stand on
-    private int _goToNode;                          // Go to this node
+    private int _nodeCount;
+    private Transform _targetNode;
 
-    private List<Transform> _openNodes;
+    private List<Transform> _closedNodes;
     private bool _canMove;
 
 	public virtual void Start ()
     {
-        _openNodes = _nodes;
         _canMove = false;
-        _currentNode = -1;
+        _nodeCount = 0;
+        _closedNodes = new List<Transform>();
+        _targetNode = _nodes[0];
         _nma = GetComponent<NavMeshAgent>();
 	}
 
@@ -35,56 +36,56 @@ public abstract class AbstractEnemy : MonoBehaviour {
         Path();
 	}
 
+    public virtual void OnTriggerEnter(Collider other)
+    {
+        if(other.gameObject.layer == 13)
+        {
+            ++_nodeCount;
+            _canMove = false;
+            _closedNodes.Add(other.transform);
+        }
+        else if(other.gameObject.layer == 14)
+        {
+            Destroy(gameObject);
+        }
+    }
+
     public void SetTargetTransform(Transform t)
     {
         _target = t;
     }
 
-    // Work on Path() an FindNode()
     private void Path()
     {
         if(_canMove)
         {
-            _target = _nodes[_goToNode];
+            _target = _targetNode;
             _nma.SetDestination(_target.position);
-
-            if (Vector3.Distance(_target.position, transform.position) < 2)
-            {
-                _canMove = false;
-                _currentNode = _goToNode;
-                _openNodes.RemoveAt(_goToNode);
-            }
 
             return;
         }
-
         FindNode();
     }
 
     private void FindNode()
     {
-        var distances = new Dictionary<int, float>();
-        for (int i = 0; i < _openNodes.Count; i++)
+        var distances = new Dictionary<Transform, float>();
+
+        foreach (Transform t in _nodes)
         {
-            distances.Add(i, Vector3.Distance(transform.position, _openNodes[i].position));
+            if (_closedNodes.Contains(t)) continue;
+            distances.Add(t, Vector3.Distance(t.position, transform.position));               
         }
 
-        List<float> fDistances = new List<float>();
-        foreach (KeyValuePair<int, float> entry in distances)
-        {
-            fDistances.Add(entry.Value);
-        }
+        //List<float> fDistances = distances.Values.ToList();
+        //Array.Sort(fDistances.ToArray());
 
-        Array.Sort(fDistances.ToArray());
-
-        foreach (KeyValuePair<int, float> entry in distances)
-        {
-            if (entry.Key != fDistances[0]) continue;
-            _goToNode = entry.Key;
-            print(_goToNode);
-            break;
-        }
-
+        //_targetNode = distances.Values.ToList().IndexOf(fDistances[0]);
+        // Research LINQ expressions!
+        //_targetNode = distances.Aggregate((l, r) => l.Value < r.Value ? l : r).Key;
+        //if (!_targetNode == _nodes[0]) _targetNode = distances.Aggregate((l, r) => l.Value < r.Value ? l : r).Key;
+        _targetNode = distances.Aggregate((l, r) => l.Value < r.Value ? l : r).Key;
+        print("Moving to " + _targetNode);
         _canMove = true;
     }
 }

@@ -26,6 +26,6 @@ public class BasicTower : AbstractTower {
         Rigidbody _bulletInstance = Instantiate(_bulletPrefab, _transform.position, _transform.rotation)
             as Rigidbody;
 
-        _bulletInstance.velocity = _transform.forward * 10f;
+        _bulletInstance.velocity = _transform.forward * 15f;
     }
 }

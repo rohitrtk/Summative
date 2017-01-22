@@ -29,10 +29,10 @@ public class AbstractTower : MonoBehaviour {
         //    as GameObject[];
         if(!_onCooldown)
         {
-            AbstractPlayer[] players = FindObjectsOfType(typeof(AbstractPlayer))
-            as AbstractPlayer[];
+            AbstractEnemy[] enemies = FindObjectsOfType(typeof(AbstractEnemy))
+            as AbstractEnemy[];
             
-            foreach(AbstractPlayer p in players)
+            foreach(AbstractEnemy p in enemies)
             {
                 //Vector3.Distance(transform.position, p.transform.position)
                 Vector3 rotationToTarget = p.transform.position - transform.position;
