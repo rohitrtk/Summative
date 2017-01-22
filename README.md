@@ -17,7 +17,7 @@ there's the combat phase where monsters spawn and try to attack some sort of obj
 
 #### Unity Requirements X/3
 - [x] Include at least 2 unique & new game components w/ unique & new code
-- [ ] Game components should demonstrate at least 3 different ways of gettings instance reference
+- [x] Game components should demonstrate at least 3 different ways of gettings instance reference
 - [x] Show appropriate use of FixedUpdate, Update and LateUpdate
 
 #### Optional Criteria X/4
