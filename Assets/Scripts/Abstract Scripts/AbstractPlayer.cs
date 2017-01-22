@@ -8,10 +8,10 @@ public abstract class AbstractPlayer : MonoBehaviour {
 
     protected Animator _anim;                               // Players animator object
     protected Rigidbody _rb;                                // Players rigidbody
-    protected PlayerHealth _ph;                             // Players health object
-    protected PlayerMP _pm;                                 // Players mana object
-    protected PlayerPhase _pp;                              // Players phase object
-    protected PlayerRoundNumber _prn;                       // Players round number object
+    public PlayerHealth _ph;                             // Players health object
+    public PlayerMP _pm;                                 // Players mana object
+    public PlayerPhase _pp;                              // Players phase object
+    public PlayerRoundNumber _prn;                       // Players round number object
 
     [SerializeField] protected float _baseMoveSpeed;        // Players base movespeed
     [SerializeField] protected float _moveSpeed;            // Players current movespeed

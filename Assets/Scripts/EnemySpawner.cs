@@ -6,6 +6,8 @@ using UnityEngine;
 /// </summary>
 public class EnemySpawner : MonoBehaviour {
 
+    public GameObject CrystalInstance;
+    public Player PlayerInstance;
     [SerializeField] private AbstractEnemy _enemyPrefab;    // Abstract enemy prefab
     public List<AbstractEnemy> Enemies;                     // List of enemies
     private List<Transform> _nodesList;                     // The node list attached to the spawner object
@@ -31,10 +33,6 @@ public class EnemySpawner : MonoBehaviour {
         CanSpawn = true;
         Enemies = new List<AbstractEnemy>();
         _spawnCount = 0;
-        //foreach(AbstractEnemy e in Enemies)
-        //{
-        //   e.SetNodeSystem(_nodesList);
-        //}
     }
 	
 	/// <summary>
@@ -47,6 +45,9 @@ public class EnemySpawner : MonoBehaviour {
         {
             Enemies.Add(Instantiate(_enemyPrefab, transform.position, transform.rotation));
             Enemies[_spawnCount].SetNodeSystem(_nodesList);
+            Enemies[_spawnCount].PlayerInstance = PlayerInstance;
+            Enemies[_spawnCount].CrystalInstance = CrystalInstance.gameObject;
+            
             _spawnCount++;
             CanSpawn = false;
             return;

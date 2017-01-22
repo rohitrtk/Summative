@@ -8,15 +8,21 @@ using UnityEngine.AI;
 /// </summary>
 public abstract class AbstractEnemy : MonoBehaviour {
 
-    [SerializeField] private Transform _target;     // Target destination
-    private NavMeshAgent _nma;                      // Navmeshagent component
+    [HideInInspector] public GameObject CrystalInstance;                  // Crystal prefab to target
+    [HideInInspector] public Player PlayerInstance;                   // Player to target;
+    [SerializeField] private Transform _target;         // Target destination
+    [SerializeField] private float _attackCooldown;     // How long to wait between attacks
+    private NavMeshAgent _nma;                          // Navmeshagent component
 
-    private List<Transform> _nodes;                 // List of nodes                 
-    private int _nodeCount;                         // How many nodes has this object pased
+    private List<Transform> _nodes;                     // List of nodes                 
+    private int _nodeCount;                             // How many nodes has this object pased
     private Transform _targetNode;
 
-    private List<Transform> _closedNodes;           // List of nodes that this object has collided with
-    private bool _canMove;                          // Can this object move?
+    private List<Transform> _closedNodes;               // List of nodes that this object has collided with
+    private bool _canMove;                              // Can this object move?
+    private bool _attacking;
+    private float _damage;
+    private float _currentCooldownTime;
 
     /// <summary>
     /// Called by Unity on object creation
@@ -24,12 +30,13 @@ public abstract class AbstractEnemy : MonoBehaviour {
 	public virtual void Start ()
     {
         _nma = GetComponent<NavMeshAgent>();
-
+        _attacking = false;
         _canMove = false;
-
+        _damage = 10f;
         _nodeCount = 0;
         _closedNodes = new List<Transform>();
         _targetNode = _nodes[0];
+        _currentCooldownTime = 0;
 	}
 
     /// <summary>
@@ -58,7 +65,6 @@ public abstract class AbstractEnemy : MonoBehaviour {
     {
         if(other.gameObject.layer == 13)
         {
-            ++_nodeCount;
             _canMove = false;
             _closedNodes.Add(other.transform);
         }
@@ -77,18 +83,60 @@ public abstract class AbstractEnemy : MonoBehaviour {
         _target = t;
     }
 
+    private bool Attack(Transform t, float distance)
+    {
+        if (Vector3.Distance(transform.position, t.position) < distance)
+        {
+            _target = t;
+            _nma.SetDestination(_target.position);
+
+            // Player
+            if(!_attacking)
+            {
+                if (t.gameObject.layer == 8)
+                {
+                    PlayerHealth ph = PlayerInstance.GetComponent<PlayerHealth>();
+                    ph.SetHealth(ph.GetHealth() - _damage);
+                }
+                else if(t.gameObject.layer == 11)
+                {
+                    CrystalManager cm = CrystalInstance.GetComponent<CrystalManager>();
+                    cm.LoseHP(_damage);
+                }
+
+                _attacking = true;
+            }
+            else
+            {
+                _currentCooldownTime -= Time.deltaTime;
+                if(_currentCooldownTime <= 0f)
+                {
+                    _attacking = false;
+                    _currentCooldownTime = _attackCooldown;
+                }
+            }
+
+            return true;
+        }
+
+        return false;
+    }
+
     /// <summary>
     /// Used to navigate the node system
     /// </summary>
     private void Path()
     {
-        if(_canMove)
+        if (Attack(PlayerInstance.transform, 2f) || Attack(CrystalInstance.transform, 5f)) return;
+
+        if (_canMove)
         {
             _target = _targetNode;
             _nma.SetDestination(_target.position);
 
             return;
         }
+
         FindNode();
     }
 
@@ -109,7 +157,7 @@ public abstract class AbstractEnemy : MonoBehaviour {
 
         // LINQ expression
         _targetNode = distances.Aggregate((l, r) => l.Value < r.Value ? l : r).Key;
-        //print("Moving to " + _targetNode);
+        
         _canMove = true;
     }
 }

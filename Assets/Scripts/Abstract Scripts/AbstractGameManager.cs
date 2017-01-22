@@ -53,10 +53,8 @@ public abstract class AbstractGameManager : MonoBehaviour {
 
         // Set enemies up
         _es = GetComponentInChildren<EnemySpawner>();
-        foreach(AbstractEnemy e in _es.Enemies)
-        {
-            e.SetTargetTransform(_crystalInstance.transform);
-        }
+        _es.CrystalInstance = _crystalInstance;
+        _es.PlayerInstance = _playerInstance;
 
         // Set up timer
         _timer = BuildPhaseTime;

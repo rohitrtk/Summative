@@ -41,7 +41,7 @@ public class CrystalManager : MonoBehaviour {
         _hp -= lose;
 
         SetHealthGUI();
-
+        print("ow");
         if (!_dead && _hp < 1f) Die();
     }
 
