@@ -5,26 +5,26 @@ using UnityEngine;
 /// <summary>
 /// The abstract layer of game managers
 /// </summary>
-public class AbstractGameManager : MonoBehaviour {
+public abstract class AbstractGameManager : MonoBehaviour {
 
     // Players
-    [SerializeField] protected Player _player;
-    [SerializeField] protected Transform _playerSpawn;
-    protected Player _playerInstance;
+    [SerializeField] protected Player _player;                     // Player prefab
+    [SerializeField] protected Transform _playerSpawn;             // Players spawn
+    protected Player _playerInstance;                              // Instance of the player to spawn
 
     // Housekeeping
-    protected bool _combatPhase;    // Current phase | combat vs build
-    protected int _roundNumber;     // Current round number
-    protected int _numOfRounds;     // Number of rounds to win on this map
+    protected bool _combatPhase;                                   // Current phase | combat vs build
+    protected int _roundNumber;                                    // Current round number
+    protected int _numOfRounds;                                    // Number of rounds to win on this map
 
     // Enemy
     [SerializeField] protected int _numEnemies;                    // Number of enemies to spawn
     protected List<GameObject> _enemies;                           // List of enemies to be spawned
     protected enum Difficulty { Easy = 1, Normal = 5, Hard = 10 }  // Difficulty level of level
-    protected EnemySpawner _es;
+    protected EnemySpawner _es;                                    // Enemy spawner reference
 
     // Chests
-    [SerializeField] protected int _numOfChests;        // Number of chests on map
+    [SerializeField] protected int _numOfChests;                    // Number of chests on map
 
     // Prefabs
     [SerializeField] protected GameObject _crystalPrefab;
@@ -43,22 +43,26 @@ public class AbstractGameManager : MonoBehaviour {
     /// </summary>
     public virtual void Start ()
     {
+        // Set player up
         _playerInstance = Instantiate(_player, _playerSpawn.position, _playerSpawn.rotation);
         GameObject.Find("Main Camera").GetComponent<Camera>().gameObject.SetActive(false);
         _playerInstance.GetComponentInChildren<Camera>().enabled = true;
 
-
+        // Set crystal up
         _crystalInstance = Instantiate(_crystalPrefab, _crystalSpawn.position, _crystalSpawn.rotation);
+
+        // Set enemies up
         _es = GetComponentInChildren<EnemySpawner>();
         foreach(AbstractEnemy e in _es.Enemies)
         {
             e.SetTargetTransform(_crystalInstance.transform);
         }
 
+        // Set up timer
         _timer = BuildPhaseTime;
-        SpawnChests();
         _roundNumber = 0;
 
+        // Start the game loop
         StartCoroutine(GameLoop());
 	}
 	
@@ -66,17 +70,6 @@ public class AbstractGameManager : MonoBehaviour {
 	public virtual void Update ()
     {
 	}
-
-    /// <summary>
-    /// Spawns chest around the map
-    /// </summary>
-    public virtual void SpawnChests()
-    {
-        foreach(var v in _chestSpawns)
-        {
-
-        }
-    }
 
     #region _GAME_LOOP_
 
@@ -104,10 +97,10 @@ public class AbstractGameManager : MonoBehaviour {
         {
             Timer();
 
-            yield return null; // Don't leave
+            yield return null; // Don't leave method
         }
 
-        ++_roundNumber;     // Add one to round number before leaving method
+        ++_roundNumber;        // Add one to round number before leaving method
 
         yield return new WaitForSeconds(BufferTime);
     }
@@ -145,7 +138,6 @@ public class AbstractGameManager : MonoBehaviour {
             else if(!_combatPhase)_combatPhase = true;
 
             _timer = BuildPhaseTime;                    // Reset timer
-            //Debug.Log(_combatPhase);
         }
     }
 
@@ -158,6 +150,7 @@ public class AbstractGameManager : MonoBehaviour {
         return _roundNumber;
     }
 
+    // Gets the player prefab
     public Player GetPlayer()
     {
         return _player;

@@ -1,21 +1,26 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// Handles the spawning of enemies
+/// </summary>
 public class EnemySpawner : MonoBehaviour {
 
-    [SerializeField] private AbstractEnemy _enemyPrefab;
-    public List<AbstractEnemy> Enemies;
-    private List<Transform> _nodesList;
-    private Transform[] _nodes;
-    private float _timer = 5f;
-    public bool CanSpawn;
-    public int numberOfEnemies = 3;
-    private int _spawnCount;
+    [SerializeField] private AbstractEnemy _enemyPrefab;    // Abstract enemy prefab
+    public List<AbstractEnemy> Enemies;                     // List of enemies
+    private List<Transform> _nodesList;                     // The node list attached to the spawner object
+    [SerializeField] private float _baseTime;               // Base spawn time
+    private float _timer;                                   // Timer before next spawn
+    public bool CanSpawn;                                   // Can an enemy be spawned right now?
+    public int numberOfEnemies = 3;                         // Number of enemies to be spawned this round
+    private int _spawnCount;                                // Number of enemies that have spawned so far
 
-	// Use this for initialization
+	/// <summary>
+    /// Called by Unity on object creation
+    /// </summary>
 	void Start ()
     {
+        _timer = _baseTime;
         _nodesList = new List<Transform>();
         
         foreach(Transform t in transform)
@@ -32,9 +37,12 @@ public class EnemySpawner : MonoBehaviour {
         //}
     }
 	
-	// Update is called once per frame
+	/// <summary>
+    /// Called by Unity once per frame
+    /// </summary>
 	void Update ()
     {
+        // If an enemy can be spawned, instantiate and add to the list of enemies
 		if(CanSpawn)
         {
             Enemies.Add(Instantiate(_enemyPrefab, transform.position, transform.rotation));
@@ -44,10 +52,11 @@ public class EnemySpawner : MonoBehaviour {
             return;
         }
 
+        // Timer to check when the next enemy can be spawned
         _timer -= Time.deltaTime;
         if(_timer <= 0f)
         {
-            _timer = 5f;
+            _timer = _baseTime;
             CanSpawn = true;
         }
 	}

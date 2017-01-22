@@ -7,7 +7,7 @@ using UnityEngine;
 public class PlayerMP : MonoBehaviour
 {
     [SerializeField] private Text t;        // Text object to write to
-    [SerializeField] private float _baseMp;
+    [SerializeField] private float _baseMp; // Players base mp value
     private float _mp;                      // Players MP
     private const string _MP = "MP: ";      // Const string for UI
 

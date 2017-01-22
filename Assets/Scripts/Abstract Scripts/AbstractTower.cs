@@ -1,43 +1,49 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-using UnityEngine.Networking;
+﻿using UnityEngine;
 
-public class AbstractTower : MonoBehaviour {
+/// <summary>
+/// All towers will extend this class
+/// </summary>
+public abstract class AbstractTower : MonoBehaviour {
 
-    [SerializeField] protected LayerMask _playerMask;     // Player mask to collide with
-    [SerializeField] protected LayerMask _enemMask;       // Enemy mask to collide with
-    [SerializeField] protected Transform _transform;
-    [SerializeField] protected float _cooldownTime;
-    [SerializeField] protected Rigidbody _bulletPrefab;
+    [SerializeField] protected LayerMask _playerMask;       // Player mask to collide with
+    [SerializeField] protected LayerMask _enemMask;         // Enemy mask to collide with
+    [SerializeField] protected Transform _transform;        // Towers transform
+    [SerializeField] protected float _cooldownTime;         // How long this tower has to wait before it can fire again 
 
-    private float radius;
-    private float _currentCooldownTime;
-    private bool _onCooldown;
+    [SerializeField] protected Rigidbody _bulletPrefab;     // Bullet reference to shoot
+    private float _currentCooldownTime;                     // What is the current cooldown time @
+    private bool _onCooldown;                               // Is this tower on cooldown?
+    private float radius;                                   // Firing range radius
 
+    /// <summary>
+    /// Called by Unity on onject creation
+    /// </summary>
     public virtual void Start ()
     {
         radius = GetComponentInChildren<SphereCollider>().radius;
-        Debug.Log(radius);
         _onCooldown = false;
         _currentCooldownTime = _cooldownTime;
 	}
 	
+    /// <summary>
+    /// Called by Unity
+    /// </summary>
 	public virtual void Update ()
     {
-        //GameObject[] gameObjectArray = FindObjectsOfType(typeof(GameObject)) 
-        //    as GameObject[];
+        // If tower can shoot
         if(!_onCooldown)
         {
+            // Find all the enemies on the map (Inefficient I know :/)
             AbstractEnemy[] enemies = FindObjectsOfType(typeof(AbstractEnemy))
-            as AbstractEnemy[];
+                as AbstractEnemy[];
             
+            // For each enemy on the map, if they're range...
             foreach(AbstractEnemy p in enemies)
             {
-                //Vector3.Distance(transform.position, p.transform.position)
                 Vector3 rotationToTarget = p.transform.position - transform.position;
                 float distanceToTarget = Vector3.Distance(transform.position, p.transform.position);
 
+                // If there is an enemy with in range, shoot at it and then leave the loop
                 if (distanceToTarget <= radius)
                 {
                     Vector3 direction = Vector3.RotateTowards(transform.position,
@@ -53,6 +59,7 @@ public class AbstractTower : MonoBehaviour {
             }
         }
 
+        // Cooldown timer 
         _currentCooldownTime -= Time.deltaTime;
         if(_currentCooldownTime <= 0f)
         {
@@ -61,9 +68,10 @@ public class AbstractTower : MonoBehaviour {
         }
 	}
 
+    /*
     public virtual void OnTriggerEnter(Collider other)
     {
-        /*
+        
         SphereCollider sc = GetComponent<SphereCollider>();
         Collider[] colliders = Physics.OverlapSphere(transform.position, sc.radius, _playerMask);
 
@@ -73,9 +81,15 @@ public class AbstractTower : MonoBehaviour {
             if (!targetsRigidbody) continue;
 
             if(!_onCooldown) LaunchProjectile();
-        }*/
+        }
     }
+    */
 
+    /// <summary>
+    /// Launches the protectile
+    /// Actual launching will be done from within child class so
+    /// vairability can be add within tower types
+    /// </summary>
     public virtual void LaunchProjectile()
     {
         _onCooldown = true;

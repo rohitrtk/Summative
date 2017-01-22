@@ -13,17 +13,27 @@ public class Player : AbstractPlayer
         base.Start();
     }
 
-    // Update is called once per frame
-    public override void Update()
-    {
-        base.Update();
-    }
-
     /// <summary>
     /// Called by Unity for physics calculations
     /// </summary>
     public override void FixedUpdate()
     {
         base.FixedUpdate();
+    }
+
+    /// <summary>
+    /// Update is called once per frame
+    /// </summary>
+    public override void Update()
+    {
+        base.Update();
+    }
+
+    /// <summary>
+    /// Called by Unity for render
+    /// </summary>
+    public override void LateUpdate()
+    {
+        base.LateUpdate();
     }
 }

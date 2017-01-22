@@ -7,7 +7,7 @@ using UnityEngine;
 public class PlayerHealth : MonoBehaviour {
 
     [SerializeField] private Text t;            // Text object to write to
-    [SerializeField] public float _baseHealth;
+    [SerializeField] public float _baseHealth;  // The base health of the player
     private float _health;                      // Players health
     private const string _HEALTH = "Health: ";  // Const string for UI
     private bool _isDead;                       // Is this player dead?
@@ -55,7 +55,10 @@ public class PlayerHealth : MonoBehaviour {
     {
         return _health;
     }
-
+    
+    /// <summary>
+    /// Updates the health UI on screen
+    /// </summary>
     public void UpdateGUI()
     {
         t.text = _HEALTH + _health.ToString();
