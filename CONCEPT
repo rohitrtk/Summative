@@ -6,7 +6,7 @@ before the combat phase, whilst the combat phase is active, a series of monsters
 to destroy the crystal.
 
 ## Outline for first version
-Player who can spawn in a turret/can auto attack
+Player who can spawn in a turret or auto attack
 Run a combat phase
 Monsters who will attack the crystal
 A spicy UI/HUD
