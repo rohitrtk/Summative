@@ -3,6 +3,7 @@ using UnityEngine.Networking;
 
 /// <summary>
 /// Handles setting up the player on this computer
+/// NOT USED!
 /// </summary>
 public class SetupLocalPlayer : NetworkBehaviour {
 
@@ -25,10 +26,4 @@ public class SetupLocalPlayer : NetworkBehaviour {
 
         GetComponent<NetworkAnimator>().SetParameterAutoSend(0, true);
     }
-
-    /*
-    public override void PreStartClient()
-    {
-        GetComponent<NetworkAnimator>().SetParameterAutoSend(0, true);
-    }*/
 }

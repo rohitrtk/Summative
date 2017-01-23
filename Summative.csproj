@@ -105,10 +105,12 @@
     <Compile Include="Assets\Imports\UnityChan\Scripts\ThirdPersonCamera.cs" />
     <Compile Include="Assets\Imports\UnityChan\Scripts\UnityChanControlScriptWithRgidBody.cs" />
     <Compile Include="Assets\Scripts\Abstract Scripts\AbstractBullet.cs" />
+    <Compile Include="Assets\Scripts\Abstract Scripts\AbstractEnemy.cs" />
     <Compile Include="Assets\Scripts\Abstract Scripts\AbstractGameManager.cs" />
     <Compile Include="Assets\Scripts\Abstract Scripts\AbstractPlayer.cs" />
     <Compile Include="Assets\Scripts\Abstract Scripts\AbstractTower.cs" />
     <Compile Include="Assets\Scripts\BasicBullet.cs" />
+    <Compile Include="Assets\Scripts\BasicEnemy.cs" />
     <Compile Include="Assets\Scripts\BasicTower.cs" />
     <Compile Include="Assets\Scripts\Chest.cs" />
     <Compile Include="Assets\Scripts\ChestSpawner.cs" />

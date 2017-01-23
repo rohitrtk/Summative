@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 /// <summary>
 /// The actualy object of AbstractGameManager to be instantiated
@@ -15,7 +13,9 @@ public class Level1Manager : AbstractGameManager {
         base.Start();
 	}
 	
-    // Called by Unity
+    /// <summary>
+    /// Called by Unity every frame
+    /// </summary>
 	public override void Update ()
     {
         base.Update();
@@ -37,5 +37,16 @@ public class Level1Manager : AbstractGameManager {
     public bool GetPhase()
     {
         return _combatPhase;
+    }
+
+    /// <summary>
+    /// Called by buttons to set the state of the game
+    /// </summary>
+    /// <param name="s"></param>
+    public void SetState(string s)
+    {
+        if (s.Equals("Play")) _gameState = State.Setup;
+        else if (s.Equals("Options")) _gameState = State.Options;
+        else if (s.Equals("Exit")) Application.Quit();
     }
 }

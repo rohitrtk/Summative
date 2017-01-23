@@ -6,9 +6,9 @@ using UnityEngine.UI;
 /// </summary>
 public class PlayerRoundNumber : MonoBehaviour {
 
-    [SerializeField] private Text t;            // Text reference
-    private int _roundNumber;                   // Current round number
-    private const string _roundText = "Round: ";// Const string for UI
+    [SerializeField] private Text t;                // Text reference
+    private int _roundNumber;                       // Current round number
+    private const string _roundText = "Round: ";    // Const string for UI
 
     /// <summary>
     /// Called by Unity upon object init

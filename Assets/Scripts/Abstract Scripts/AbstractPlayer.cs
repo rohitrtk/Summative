@@ -6,38 +6,35 @@ using System.Collections.Generic;
 /// </summary>
 public abstract class AbstractPlayer : MonoBehaviour {
 
-    protected Animator _anim;           // Players animator object
-    protected Rigidbody _rb;            // Players rigidbody
-    protected PlayerHealth _ph;         // Players health object
-    protected PlayerMP _pm;             // Players mana object
-    protected PlayerPhase _pp;          // Players phase object
-    protected PlayerRoundNumber _prn;   // Players round number object
+    protected Animator _anim;                               // Players animator object
+    protected Rigidbody _rb;                                // Players rigidbody
+    public PlayerHealth _ph;                                // Players health object
+    public PlayerMP _pm;                                    // Players mana object
+    public PlayerPhase _pp;                                 // Players phase object
+    public PlayerRoundNumber _prn;                          // Players round number object
 
-    //private float _hp { set; get; }             // Players HP                         
-    //private float _mp { set; get; }             // Players MP
-    [SerializeField] protected float _baseMoveSpeed;  // Players base movespeed
+    [SerializeField] protected float _baseMoveSpeed;        // Players base movespeed
     [SerializeField] protected float _moveSpeed;            // Players current movespeed
     [SerializeField] protected float _runSpeed;             // Players run speed
     [SerializeField] protected float _turnSpeed;            // Players turn speed
     protected string _inputHorizontalAxis = "Horizontal";   // Players x axis input
     protected string _inputVerticalAxis = "Vertical";       // Players z axis input
-    protected float _inputHorizontal;           // Input on x axis
-    protected float _inputVertical;             // Input on z axis
-    protected bool _run;                        // Is this player running?
-    protected bool _jump;                       // Is this player jumping?
+    protected float _inputHorizontal;                       // Input on x axis
+    protected float _inputVertical;                         // Input on z axis
+    protected bool _run;                                    // Is this player running?
+    protected bool _jump;                                   // Is this player jumping?
 
-    // Level1Manager object
-    protected Level1Manager _gm;
+    protected Level1Manager _gm;                            // Level1Manager object
 
-    //Towers
-    [SerializeField] AbstractTower _towerPrefab;
-    protected List<AbstractTower> _towers;
+    [SerializeField] protected AbstractTower _towerPrefab;            // Tower prefab
+    protected List<AbstractTower> _towers;                  // List of this players towers
 
     /// <summary>
-    /// Called by Unity (More less a constructor)
+    /// Called by Unity on object creation
     /// </summary>
-	public virtual void Start ()
+	public virtual void Awake ()
     {
+        // Get all components for this class to work
         _anim = GetComponent<Animator>();
         _rb = GetComponent<Rigidbody>();
         _ph = GetComponent<PlayerHealth>();
@@ -45,29 +42,9 @@ public abstract class AbstractPlayer : MonoBehaviour {
         _pp = GetComponent<PlayerPhase>();
         _prn = GetComponent<PlayerRoundNumber>();
         _gm = GameObject.Find("Level1Manager").GetComponent<Level1Manager>();
-
-
         _towers = new List<AbstractTower>();
-        //_mp = _pm.GetMP();
-        //_hp = _ph.GetHealth();
     }
 	
-    /// <summary>
-    /// Called by Unity every frame
-    /// </summary>
-	public virtual void Update ()
-    {
-        _inputHorizontal = Input.GetAxis(_inputHorizontalAxis);
-        _inputVertical = Input.GetAxis(_inputVerticalAxis);
-
-        KeyController();
-
-        SetAnimations();
-
-        if(!(_pp.GetCurrentPhase() == _gm.GetPhase()))_pp.SetCurrentPhase(_gm.GetPhase());
-        if(!(_prn.GetRoundNumber() == _gm.GetRound()))_prn.SetRoundNumber(_gm.GetRound());
-    }
-
     /// <summary>
     /// Called by Unity for physics calculations
     /// </summary>
@@ -93,12 +70,38 @@ public abstract class AbstractPlayer : MonoBehaviour {
         _rb.MoveRotation(_rb.rotation * turnRotation);
     }
 
+    /// <summary>
+    /// Called by Unity every frame
+    /// </summary>
+	public virtual void Update ()
+    {
+        _inputHorizontal = Input.GetAxis(_inputHorizontalAxis);
+        _inputVertical = Input.GetAxis(_inputVerticalAxis);
+
+        KeyController();
+
+        if(!(_pp.GetCurrentPhase() == _gm.GetPhase()))_pp.SetCurrentPhase(_gm.GetPhase());
+        if(!(_prn.GetRoundNumber() == _gm.GetRound()))_prn.SetRoundNumber(_gm.GetRound());
+    }
+
+    /// <summary>
+    /// Render method called by Unity
+    /// </summary>
+    public virtual void LateUpdate()
+    {
+        SetAnimations();
+    }
+
+    /// <summary>
+    /// Called by Unity when a trigegr collision is detected
+    /// </summary>
+    /// <param name="collision"></param>
     public virtual void OnTriggerEnter(Collider collision)
     {
         if (collision.gameObject.layer == 9)
         {
             Chest c = collision.gameObject.GetComponent<Chest>();
-            _pm.SetMP(_pm.GetMP() + c.GetAmountOfMp());
+            _pm.GainMP(c.GetAmountOfMp());
             c.gameObject.SetActive(false);
         }
     }
@@ -114,6 +117,9 @@ public abstract class AbstractPlayer : MonoBehaviour {
         _anim.SetBool("Jump", _jump);
     }
 
+    /// <summary>
+    /// Used to check input that isn't on the x or z axis
+    /// </summary>
     private void KeyController()
     {
         if (Input.GetKey(KeyCode.LeftShift)) _run = true;
@@ -124,7 +130,10 @@ public abstract class AbstractPlayer : MonoBehaviour {
 
         if (Input.GetKeyUp(KeyCode.Q))
         {
-            _towers.Add(Instantiate(_towerPrefab, transform.position, transform.rotation));
+            print(_pm.GetMP() + " " + _towerPrefab.GetCost());
+            if (_pm.GetMP() < _towerPrefab.GetCost()) return;
+            _towers.Add(Instantiate(_towerPrefab, transform.position + transform.forward, transform.rotation));
+            _pm.LoseMP(_towerPrefab.GetCost());
         }
     }
 }

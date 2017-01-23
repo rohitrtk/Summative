@@ -5,25 +5,30 @@ using UnityEngine;
 /// <summary>
 /// The abstract layer of game managers
 /// </summary>
-public class AbstractGameManager : MonoBehaviour {
+public abstract class AbstractGameManager : MonoBehaviour {
+
+    // States
+    protected enum State { Menu, Game , Setup, Options }           // List of gamestates 
+    protected State _gameState;                                    // Current gamestate
 
     // Players
-    [SerializeField] protected Player _player;
-    [SerializeField] protected Transform _playerSpawn;
-    protected Player _playerInstance;
+    [SerializeField] protected Player _player;                     // Player prefab
+    [SerializeField] protected Transform _playerSpawn;             // Players spawn
+    protected Player _playerInstance;                              // Instance of the player to spawn
 
     // Housekeeping
-    protected bool _combatPhase;    // Current phase | combat vs build
-    protected int _roundNumber;     // Current round number
-    protected int _numOfRounds;     // Number of rounds to win on this map
+    protected bool _combatPhase;                                   // Current phase | combat vs build
+    protected int _roundNumber;                                    // Current round number
+    protected int _numOfRounds;                                    // Number of rounds to win on this map
 
     // Enemy
     [SerializeField] protected int _numEnemies;                    // Number of enemies to spawn
     protected List<GameObject> _enemies;                           // List of enemies to be spawned
     protected enum Difficulty { Easy = 1, Normal = 5, Hard = 10 }  // Difficulty level of level
+    protected EnemySpawner _es;                                    // Enemy spawner reference
 
     // Chests
-    [SerializeField] protected int _numOfChests;        // Number of chests on map
+    [SerializeField] protected int _numOfChests;                    // Number of chests on map
 
     // Prefabs
     [SerializeField] protected GameObject _crystalPrefab;
@@ -42,15 +47,9 @@ public class AbstractGameManager : MonoBehaviour {
     /// </summary>
     public virtual void Start ()
     {
-        _playerInstance = Instantiate(_player, _playerSpawn.position, _playerSpawn.rotation);
-        GameObject.Find("Main Camera").GetComponent<Camera>().gameObject.SetActive(false);
-        _playerInstance.GetComponentInChildren<Camera>().enabled = true;
+        _gameState = State.Menu;
 
-        _crystalInstance = Instantiate(_crystalPrefab, _crystalSpawn.position, _crystalSpawn.rotation);
-        _timer = BuildPhaseTime;
-        SpawnChests();
-        _roundNumber = 0;
-
+        // Start the game loop
         StartCoroutine(GameLoop());
 	}
 	
@@ -59,30 +58,72 @@ public class AbstractGameManager : MonoBehaviour {
     {
 	}
 
-    /// <summary>
-    /// Spawns chest around the map
-    /// </summary>
-    public virtual void SpawnChests()
-    {
-        foreach(var v in _chestSpawns)
-        {
-
-        }
-    }
-
     #region _GAME_LOOP_
 
     /// <summary>
-    /// Recursive method, loops through the build phase and combat phase
+    /// Recursive method, loops through the build phase, combat phase and states
     /// </summary>
     /// <returns></returns>
     private IEnumerator GameLoop()
     {
-        yield return StartCoroutine(BuildPhase());
-        yield return StartCoroutine(CombatPhase());
+        if(_gameState == State.Menu || _gameState == State.Setup)
+        {
+            yield return StartCoroutine(Menu());
+            yield return StartCoroutine(Launch());
+        }
+        else
+        {
+            yield return StartCoroutine(BuildPhase());
+            yield return StartCoroutine(CombatPhase());
+        }
 
         // Infinite game loop
         StartCoroutine(GameLoop());
+    }
+
+    /// <summary>
+    /// Method for the menu state
+    /// </summary>
+    /// <returns></returns>
+    private IEnumerator Menu()
+    {
+        while(_gameState == State.Menu)
+        {
+            yield return null;
+        }
+
+        GameObject.Find("HUD").SetActive(false);
+
+        yield return new WaitForSeconds(0.1f);
+    }
+
+    /// <summary>
+    /// Method to initialize everything
+    /// </summary>
+    /// <returns></returns>
+    private IEnumerator Launch()
+    {
+        // Set player up
+        _playerInstance = Instantiate(_player, _playerSpawn.position, _playerSpawn.rotation);
+        GameObject.Find("Main Camera").GetComponent<Camera>().gameObject.SetActive(false);
+        _playerInstance.GetComponentInChildren<Camera>().enabled = true;
+
+        // Set crystal up
+        _crystalInstance = Instantiate(_crystalPrefab, _crystalSpawn.position, _crystalSpawn.rotation);
+
+        // Set enemies up
+        _es = GetComponentInChildren<EnemySpawner>();
+        _es.enabled = true;
+        _es.CrystalInstance = _crystalInstance;
+        _es.PlayerInstance = _playerInstance;
+
+        // Set up timer
+        _timer = BuildPhaseTime;
+        _roundNumber = 0;
+
+        _gameState = State.Game;
+
+        yield return new WaitForSeconds(0.1f);
     }
 
     /// <summary>
@@ -96,10 +137,10 @@ public class AbstractGameManager : MonoBehaviour {
         {
             Timer();
 
-            yield return null; // Don't leave
+            yield return null; // Don't leave method
         }
 
-        ++_roundNumber;     // Add one to round number before leaving method
+        ++_roundNumber;        // Add one to round number before leaving method
 
         yield return new WaitForSeconds(BufferTime);
     }
@@ -113,7 +154,10 @@ public class AbstractGameManager : MonoBehaviour {
         // While it is the combat phase
         while (_combatPhase)
         {
-            Timer();
+
+            _es.CombatPhase = true; ;
+
+            if (_es._waveDefeated) _combatPhase = false;
 
             yield return null;
         }
@@ -137,7 +181,6 @@ public class AbstractGameManager : MonoBehaviour {
             else if(!_combatPhase)_combatPhase = true;
 
             _timer = BuildPhaseTime;                    // Reset timer
-            //Debug.Log(_combatPhase);
         }
     }
 
@@ -150,6 +193,10 @@ public class AbstractGameManager : MonoBehaviour {
         return _roundNumber;
     }
 
+    /// <summary>
+    /// Gets the player prefab
+    /// </summary>
+    /// <returns></returns>
     public Player GetPlayer()
     {
         return _player;

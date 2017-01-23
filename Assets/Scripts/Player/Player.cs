@@ -8,15 +8,9 @@ public class Player : AbstractPlayer
     /// <summary>
     /// Called by Unity
     /// </summary>
-    public override void Start()
+    public override void Awake()
     {
-        base.Start();
-    }
-
-    // Update is called once per frame
-    public override void Update()
-    {
-        base.Update();
+        base.Awake();
     }
 
     /// <summary>
@@ -25,5 +19,21 @@ public class Player : AbstractPlayer
     public override void FixedUpdate()
     {
         base.FixedUpdate();
+    }
+
+    /// <summary>
+    /// Update is called once per frame
+    /// </summary>
+    public override void Update()
+    {
+        base.Update();
+    }
+
+    /// <summary>
+    /// Called by Unity for render
+    /// </summary>
+    public override void LateUpdate()
+    {
+        base.LateUpdate();
     }
 }
