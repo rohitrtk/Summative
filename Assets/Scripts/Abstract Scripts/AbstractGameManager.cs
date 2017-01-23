@@ -42,12 +42,16 @@ public abstract class AbstractGameManager : MonoBehaviour {
     [SerializeField] protected float BuildPhaseTime;                // Time before build phase and/or combat phase to end
     protected float _timer;                                         // Timer based on Time.deltaTime
 
+    protected static float _enemyFunction;
+
     /// <summary>
     /// Called by Unity for object init
     /// </summary>
     public virtual void Start ()
     {
         _gameState = State.Menu;
+
+        _enemyFunction = _roundNumber * (int)Difficulty.Normal + 3f;
 
         // Start the game loop
         StartCoroutine(GameLoop());
@@ -132,6 +136,8 @@ public abstract class AbstractGameManager : MonoBehaviour {
     /// <returns></returns>
     private IEnumerator BuildPhase()
     {
+        _es.enabled = false;
+        _es._deathCount = 0;
         // While it is the build phase
         while (!_combatPhase)
         {
@@ -151,14 +157,12 @@ public abstract class AbstractGameManager : MonoBehaviour {
     /// <returns></returns>
     private IEnumerator CombatPhase()
     {
+        _es.enabled = true;
+        _es.NumberOfEnemies = (int)_enemyFunction;
         // While it is the combat phase
         while (_combatPhase)
         {
-
-            _es.CombatPhase = true; ;
-
             if (_es._waveDefeated) _combatPhase = false;
-
             yield return null;
         }
 

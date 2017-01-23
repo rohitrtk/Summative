@@ -130,7 +130,6 @@ public abstract class AbstractPlayer : MonoBehaviour {
 
         if (Input.GetKeyUp(KeyCode.Q))
         {
-            print(_pm.GetMP() + " " + _towerPrefab.GetCost());
             if (_pm.GetMP() < _towerPrefab.GetCost()) return;
             _towers.Add(Instantiate(_towerPrefab, transform.position + transform.forward, transform.rotation));
             _pm.LoseMP(_towerPrefab.GetCost());

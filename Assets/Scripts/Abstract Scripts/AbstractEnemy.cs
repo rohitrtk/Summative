@@ -87,12 +87,19 @@ public abstract class AbstractEnemy : MonoBehaviour {
             _canMove = false;
             _closedNodes.Add(other.transform);
         }
-        // Enemy
+        // Bullet
         else if(other.gameObject.layer == 14)
         {
             _dead = true;
             Destroy(other.gameObject);  // Destroy the bullet afterwards
+            Destroy(gameObject);
         }
+    }
+
+    public virtual void OnDestroy()
+    {
+        EnemySpawner _es = GameObject.Find("EnemySpawnTransform").GetComponent<EnemySpawner>();
+        _es._deathCount++;
     }
 
     /// <summary>

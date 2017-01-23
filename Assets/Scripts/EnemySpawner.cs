@@ -20,13 +20,15 @@ public class EnemySpawner : MonoBehaviour {
     private List<Transform> _nodesList;                     // The node list attached to the spawner object
     private float _timer;                                   // Timer before next spawn
     private int _spawnCount;                                // Number of enemies that have spawned so far
-    private int _deathCount;
+    public int _deathCount;                                // Number of enemies that have died so far
 
 	/// <summary>
     /// Called by Unity on object creation
     /// </summary>
 	private void Awake ()
     {
+        _deathCount = 0;
+        _waveDefeated = false;
         _timer = _baseTime;
         _nodesList = new List<Transform>();
         
@@ -45,7 +47,6 @@ public class EnemySpawner : MonoBehaviour {
     /// </summary>
 	private void Update ()
     {
-        if (!CombatPhase) return;
 
         // If an enemy can be spawned, instantiate and add to the list of enemies
 		if(CanSpawn && _spawnCount < NumberOfEnemies)
@@ -72,13 +73,10 @@ public class EnemySpawner : MonoBehaviour {
             return;
         }
 
-        List<int> deadEnemies = new List<int>();
-        foreach (AbstractEnemy e in Enemies) if (e._dead) deadEnemies.Add(e.AssignedNumber);
-
-        foreach (int i in deadEnemies)
+        if (_deathCount >= NumberOfEnemies)
         {
-            Destroy(Enemies[i].gameObject);
-            Enemies.RemoveAt(i);
+            _waveDefeated = true;
+            Enemies.Clear();
         }
     }
 }
