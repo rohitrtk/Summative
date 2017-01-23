@@ -8,6 +8,10 @@ public class PlayerHealth : MonoBehaviour {
 
     [SerializeField] private Text t;            // Text object to write to
     [SerializeField] public float _baseHealth;  // The base health of the player
+    [SerializeField] private Slider _slider;    // Slider for the health UI
+    [SerializeField] private Image _image;      // Image for the circle thingy
+
+    private Color _fullHealthColour;            // The full health colour
     private float _health;                      // Players health
     private const string _HEALTH = "Health: ";  // Const string for UI
     private bool _isDead;                       // Is this player dead?
@@ -17,6 +21,8 @@ public class PlayerHealth : MonoBehaviour {
     /// </summary>
     public void Start()
     {
+        _fullHealthColour = Color.red;
+
         SetHealth(_baseHealth);
         TakeDamage(0f);
     }
@@ -28,13 +34,9 @@ public class PlayerHealth : MonoBehaviour {
     public void TakeDamage(float damageTaken)
     {
         _health -= damageTaken;
-
-        if (_health < 1f)
-        {
-            _isDead = false;
-            _health = 0f;
-        }
         UpdateGUI();
+            
+        if (_health < 1f) Die();
     }
 
     /// <summary>
@@ -61,6 +63,16 @@ public class PlayerHealth : MonoBehaviour {
     /// </summary>
     public void UpdateGUI()
     {
-        t.text = _HEALTH + _health.ToString();
+        //t.text = _HEALTH + _health.ToString();
+        _slider.value = _health;
+        _image.color = _fullHealthColour;
+    }
+
+    /// <summary>
+    /// Called when the player dies
+    /// </summary>
+    public void Die()
+    {
+        _isDead = true;
     }
 }

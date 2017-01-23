@@ -32,7 +32,7 @@ public abstract class AbstractPlayer : MonoBehaviour {
     /// <summary>
     /// Called by Unity on object creation
     /// </summary>
-	public virtual void Start ()
+	public virtual void Awake ()
     {
         // Get all components for this class to work
         _anim = GetComponent<Animator>();
@@ -101,7 +101,7 @@ public abstract class AbstractPlayer : MonoBehaviour {
         if (collision.gameObject.layer == 9)
         {
             Chest c = collision.gameObject.GetComponent<Chest>();
-            _pm.SetMP(_pm.GetMP() + c.GetAmountOfMp());
+            _pm.GainMP(c.GetAmountOfMp());
             c.gameObject.SetActive(false);
         }
     }
@@ -130,7 +130,10 @@ public abstract class AbstractPlayer : MonoBehaviour {
 
         if (Input.GetKeyUp(KeyCode.Q))
         {
+            print(_pm.GetMP() + " " + _towerPrefab.GetCost());
+            if (_pm.GetMP() < _towerPrefab.GetCost()) return;
             _towers.Add(Instantiate(_towerPrefab, transform.position + transform.forward, transform.rotation));
+            _pm.LoseMP(_towerPrefab.GetCost());
         }
     }
 }

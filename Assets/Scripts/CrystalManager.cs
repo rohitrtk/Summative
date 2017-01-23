@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.UI;
 
 /// <summary>
@@ -20,7 +18,7 @@ public class CrystalManager : MonoBehaviour {
     /// <summary>
     /// Called by Unity on object creation
     /// </summary>
-	void Start ()
+	void Awake ()
     {
         if (_hp > _baseHealth) _hp = _baseHealth;
 

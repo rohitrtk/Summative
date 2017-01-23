@@ -38,4 +38,11 @@ public class Level1Manager : AbstractGameManager {
     {
         return _combatPhase;
     }
+
+    public void SetState(string s)
+    {
+        if (s.Equals("Play")) _gameState = State.Setup;
+        else if (s.Equals("Options")) _gameState = State.Options;
+        else if (s.Equals("Exit")) Application.Quit();
+    }
 }

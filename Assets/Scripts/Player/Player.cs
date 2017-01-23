@@ -8,9 +8,9 @@ public class Player : AbstractPlayer
     /// <summary>
     /// Called by Unity
     /// </summary>
-    public override void Start()
+    public override void Awake()
     {
-        base.Start();
+        base.Awake();
     }
 
     /// <summary>

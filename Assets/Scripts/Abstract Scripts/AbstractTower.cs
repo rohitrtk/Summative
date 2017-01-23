@@ -12,6 +12,8 @@ public abstract class AbstractTower : MonoBehaviour {
     [SerializeField] protected float _cooldownTime;         // How long this tower has to wait before it can fire again 
     [SerializeField] protected Rigidbody _bulletPrefab;     // Bullet reference to shoot
 
+    protected float _cost = 10f;                            // Cost of tower
+
     [SerializeField] private float _hp;                     // Towers current health
     [SerializeField] private Slider _slider;                // Slider for the health UI
     [SerializeField] private Image _image;                  // Image for the circle thingy
@@ -127,5 +129,10 @@ public abstract class AbstractTower : MonoBehaviour {
         SetHealthGUI();
 
         if (_hp <= 1f) Die();
+    }
+
+    public float GetCost()
+    {
+        return _cost;
     }
 }

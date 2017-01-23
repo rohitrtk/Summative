@@ -7,6 +7,10 @@ using UnityEngine;
 /// </summary>
 public abstract class AbstractGameManager : MonoBehaviour {
 
+    // States
+    protected enum State { Menu, Game , Setup, Options }
+    protected State _gameState;
+
     // Players
     [SerializeField] protected Player _player;                     // Player prefab
     [SerializeField] protected Transform _playerSpawn;             // Players spawn
@@ -43,22 +47,7 @@ public abstract class AbstractGameManager : MonoBehaviour {
     /// </summary>
     public virtual void Start ()
     {
-        // Set player up
-        _playerInstance = Instantiate(_player, _playerSpawn.position, _playerSpawn.rotation);
-        GameObject.Find("Main Camera").GetComponent<Camera>().gameObject.SetActive(false);
-        _playerInstance.GetComponentInChildren<Camera>().enabled = true;
-
-        // Set crystal up
-        _crystalInstance = Instantiate(_crystalPrefab, _crystalSpawn.position, _crystalSpawn.rotation);
-
-        // Set enemies up
-        _es = GetComponentInChildren<EnemySpawner>();
-        _es.CrystalInstance = _crystalInstance;
-        _es.PlayerInstance = _playerInstance;
-
-        // Set up timer
-        _timer = BuildPhaseTime;
-        _roundNumber = 0;
+        _gameState = State.Menu;
 
         // Start the game loop
         StartCoroutine(GameLoop());
@@ -72,16 +61,61 @@ public abstract class AbstractGameManager : MonoBehaviour {
     #region _GAME_LOOP_
 
     /// <summary>
-    /// Recursive method, loops through the build phase and combat phase
+    /// Recursive method, loops through the build phase, combat phase and states
     /// </summary>
     /// <returns></returns>
     private IEnumerator GameLoop()
     {
-        yield return StartCoroutine(BuildPhase());
-        yield return StartCoroutine(CombatPhase());
+        if(_gameState == State.Menu || _gameState == State.Setup)
+        {
+            yield return StartCoroutine(Menu());
+            yield return StartCoroutine(Launch());
+        }
+        else
+        {
+            yield return StartCoroutine(BuildPhase());
+            yield return StartCoroutine(CombatPhase());
+        }
 
         // Infinite game loop
         StartCoroutine(GameLoop());
+    }
+
+    private IEnumerator Menu()
+    {
+        while(_gameState == State.Menu)
+        {
+            yield return null;
+        }
+
+        GameObject.Find("HUD").SetActive(false);
+
+        yield return new WaitForSeconds(0.1f);
+    }
+
+    private IEnumerator Launch()
+    {
+        // Set player up
+        _playerInstance = Instantiate(_player, _playerSpawn.position, _playerSpawn.rotation);
+        GameObject.Find("Main Camera").GetComponent<Camera>().gameObject.SetActive(false);
+        _playerInstance.GetComponentInChildren<Camera>().enabled = true;
+
+        // Set crystal up
+        _crystalInstance = Instantiate(_crystalPrefab, _crystalSpawn.position, _crystalSpawn.rotation);
+
+        // Set enemies up
+        _es = GetComponentInChildren<EnemySpawner>();
+        _es.enabled = true;
+        _es.CrystalInstance = _crystalInstance;
+        _es.PlayerInstance = _playerInstance;
+
+        // Set up timer
+        _timer = BuildPhaseTime;
+        _roundNumber = 0;
+
+        _gameState = State.Game;
+
+        yield return new WaitForSeconds(0.1f);
     }
 
     /// <summary>

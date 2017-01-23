@@ -37,7 +37,7 @@ public abstract class AbstractEnemy : MonoBehaviour {
         _damage = 10f;
         _nodeCount = 0;
         _closedNodes = new List<Transform>();
-        _targetNode = _nodes[0];
+        //_targetNode = _nodes[0];
         _currentCooldownTime = 0;
 	}
 
@@ -102,7 +102,7 @@ public abstract class AbstractEnemy : MonoBehaviour {
         {
             _target = t;
             _nma.SetDestination(_target.position);
-            _nma.stoppingDistance = 3f;
+            _nma.stoppingDistance = distance;
 
             if(!_attacking)
             {
@@ -146,8 +146,9 @@ public abstract class AbstractEnemy : MonoBehaviour {
     /// </summary>
     private void Path()
     {
-        if (Attack(PlayerInstance.transform, 2f) || Attack(CrystalInstance.transform, 5f)
-            || Attack(TowerInstance.transform, 4f)) return;
+        if (Attack(PlayerInstance.transform, 2f) 
+            || Attack(CrystalInstance.transform, 5f)
+            || Attack(TowerInstance.transform, 3f)) return;
 
         _nma.stoppingDistance = 0f;
 

@@ -21,7 +21,7 @@ public class EnemySpawner : MonoBehaviour {
 	/// <summary>
     /// Called by Unity on object creation
     /// </summary>
-	void Start ()
+	void Awake ()
     {
         _timer = _baseTime;
         _nodesList = new List<Transform>();
