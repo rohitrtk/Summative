@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.AI;
@@ -8,8 +9,9 @@ using UnityEngine.AI;
 /// </summary>
 public abstract class AbstractEnemy : MonoBehaviour {
 
-    [HideInInspector] public GameObject CrystalInstance;                  // Crystal prefab to target
+    [HideInInspector] public GameObject CrystalInstance;              // Crystal prefab to target
     [HideInInspector] public Player PlayerInstance;                   // Player to target;
+    [HideInInspector] public AbstractTower TowerInstance;             // Tower instance to target
     [SerializeField] private Transform _target;         // Target destination
     [SerializeField] private float _attackCooldown;     // How long to wait between attacks
     private NavMeshAgent _nma;                          // Navmeshagent component
@@ -54,6 +56,17 @@ public abstract class AbstractEnemy : MonoBehaviour {
     public virtual void Update ()
     {
         if (_target.position == null) return;
+
+        AbstractTower[] ats = FindObjectsOfType(typeof(AbstractTower))
+            as AbstractTower[];
+        var distances = new Dictionary<AbstractTower, float>();
+
+        foreach (AbstractTower at in ats)
+        {
+            distances.Add(at, Vector3.Distance(at.transform.position, transform.position));
+        }
+        TowerInstance = distances.Aggregate((l, r) => l.Value < r.Value ? l : r).Key;
+
         Path();
 	}
 
@@ -89,19 +102,27 @@ public abstract class AbstractEnemy : MonoBehaviour {
         {
             _target = t;
             _nma.SetDestination(_target.position);
+            _nma.stoppingDistance = 3f;
 
-            // Player
             if(!_attacking)
             {
+                // player
                 if (t.gameObject.layer == 8)
                 {
                     PlayerHealth ph = PlayerInstance.GetComponent<PlayerHealth>();
                     ph.SetHealth(ph.GetHealth() - _damage);
                 }
-                else if(t.gameObject.layer == 11)
+                // Crystal
+                else if (t.gameObject.layer == 11)
                 {
                     CrystalManager cm = CrystalInstance.GetComponent<CrystalManager>();
                     cm.LoseHP(_damage);
+                }
+                // Tower
+                else if(t.gameObject.layer == 10)
+                {
+                    AbstractTower at = TowerInstance.GetComponent<AbstractTower>();
+                    at.TakeDamage(_damage);
                 }
 
                 _attacking = true;
@@ -115,10 +136,8 @@ public abstract class AbstractEnemy : MonoBehaviour {
                     _currentCooldownTime = _attackCooldown;
                 }
             }
-
             return true;
         }
-
         return false;
     }
 
@@ -127,7 +146,10 @@ public abstract class AbstractEnemy : MonoBehaviour {
     /// </summary>
     private void Path()
     {
-        if (Attack(PlayerInstance.transform, 2f) || Attack(CrystalInstance.transform, 5f)) return;
+        if (Attack(PlayerInstance.transform, 2f) || Attack(CrystalInstance.transform, 5f)
+            || Attack(TowerInstance.transform, 4f)) return;
+
+        _nma.stoppingDistance = 0f;
 
         if (_canMove)
         {

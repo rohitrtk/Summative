@@ -5,17 +5,19 @@
 /// </summary>
 public abstract class AbstractBullet : MonoBehaviour {
 
-    [SerializeField] protected LayerMask _playerMask;     // Player mask to collide with
-    [SerializeField] protected LayerMask _enemMask;       // Enemy mask to collide with
+    [SerializeField] protected LayerMask _playerMask;    // Player mask to collide with
+    [SerializeField] protected LayerMask _enemMask;      // Enemy mask to collide with
     [SerializeField] protected float _damage;           // Damage bullet will do
     [SerializeField] protected float _destroyTime;      // If the bullet doesn't hit anything, despawn after this time
     [SerializeField] protected float _radius = 0.5f;    // Radius to collide with
+    protected float _waitTime;                          // Time to wait before bullet collision
 
     /// <summary>
     /// Called by Unity on object creation
     /// </summary>
     public virtual void Start ()
     {
+        _waitTime = _destroyTime / 2;
         Destroy(gameObject, _destroyTime);
 	}
 
@@ -24,6 +26,7 @@ public abstract class AbstractBullet : MonoBehaviour {
     /// </summary>
     public virtual void Update ()
     {
+        _waitTime -= Time.deltaTime;
 	}
 
     /// <summary>
@@ -32,33 +35,7 @@ public abstract class AbstractBullet : MonoBehaviour {
     /// <param name="other"></param>
     public virtual void OnTriggerEnter(Collider other)
     {
-        // Check for player first
-        // Get the colliders from the player mask
-        Collider[] colliders = Physics.OverlapSphere(transform.position, _radius, _playerMask);
-
-        foreach(Collider c in colliders)
-        {
-            Rigidbody targetsRigidbody = c.GetComponent<Rigidbody>();
-            if (!targetsRigidbody) continue;
-
-            PlayerHealth ph = targetsRigidbody.GetComponent<PlayerHealth>();
-            ph.TakeDamage(GetDamageDone());
-            Destroy(gameObject);
-        }
-
-        // Check for enemy
-        colliders = Physics.OverlapSphere(transform.position, _radius, _enemMask);
-
-        // Check for enemies
-        foreach (Collider c in colliders)
-        {
-            Rigidbody targetsRigidbody = c.GetComponent<Rigidbody>();
-            if (!targetsRigidbody) continue;
-
-            //PlayerHealth ph = targetsRigidbody.GetComponent<PlayerHealth>();
-            //ph.TakeDamage(GetDamageDone());
-            //Destroy(gameObject);
-        }
+        if(_waitTime <= 0f) Destroy(gameObject);
     }
 
     /// <summary>

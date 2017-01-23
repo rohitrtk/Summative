@@ -8,10 +8,10 @@ public abstract class AbstractPlayer : MonoBehaviour {
 
     protected Animator _anim;                               // Players animator object
     protected Rigidbody _rb;                                // Players rigidbody
-    public PlayerHealth _ph;                             // Players health object
-    public PlayerMP _pm;                                 // Players mana object
-    public PlayerPhase _pp;                              // Players phase object
-    public PlayerRoundNumber _prn;                       // Players round number object
+    public PlayerHealth _ph;                                // Players health object
+    public PlayerMP _pm;                                    // Players mana object
+    public PlayerPhase _pp;                                 // Players phase object
+    public PlayerRoundNumber _prn;                          // Players round number object
 
     [SerializeField] protected float _baseMoveSpeed;        // Players base movespeed
     [SerializeField] protected float _moveSpeed;            // Players current movespeed
@@ -130,7 +130,7 @@ public abstract class AbstractPlayer : MonoBehaviour {
 
         if (Input.GetKeyUp(KeyCode.Q))
         {
-            _towers.Add(Instantiate(_towerPrefab, transform.position, transform.rotation));
+            _towers.Add(Instantiate(_towerPrefab, transform.position + transform.forward, transform.rotation));
         }
     }
 }

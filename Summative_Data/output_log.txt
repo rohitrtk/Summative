@@ -40,7 +40,7 @@ The tree Tree_Common_01 couldn't be instanced because the prefab contains no val
  
 (Filename:  Line: 160)
 
-UnloadTime: 0.778239 ms
+UnloadTime: 0.802047 ms
 TerrainCollider: MeshCollider is not supported on terrain at the moment.
  
 (Filename:  Line: 185)
@@ -58,10 +58,10 @@ Failed to create agent because there is no valid NavMesh
 (Filename:  Line: 498)
 
 Setting up 2 worker threads for Enlighten.
-  Thread -> id: 1230 -> priority: 1 
-  Thread -> id: 1b38 -> priority: 1 
+  Thread -> id: 3278 -> priority: 1 
+  Thread -> id: 2124 -> priority: 1 
 Unloading 5 Unused Serialized files (Serialized files now loaded: 0)
-UnloadTime: 3.781631 ms
+UnloadTime: 3.886335 ms
 TerrainCollider: MeshCollider is not supported on terrain at the moment.
  
 (Filename:  Line: 185)
@@ -79,6 +79,6 @@ Failed to create agent because it is not close enough to the NavMesh
 (Filename:  Line: 511)
 
 
-Unloading 14 unused Assets to reduce memory usage. Loaded Objects now: 1654.
-Total: 0.549119 ms (FindLiveObjects: 0.034559 ms CreateObjectMapping: 0.035583 ms MarkObjects: 0.235263 ms  DeleteObjects: 0.243455 ms)
+Unloading 14 unused Assets to reduce memory usage. Loaded Objects now: 1723.
+Total: 0.553215 ms (FindLiveObjects: 0.032511 ms CreateObjectMapping: 0.035583 ms MarkObjects: 0.243711 ms  DeleteObjects: 0.241151 ms)
 

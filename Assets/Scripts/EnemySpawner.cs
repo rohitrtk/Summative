@@ -14,8 +14,9 @@ public class EnemySpawner : MonoBehaviour {
     [SerializeField] private float _baseTime;               // Base spawn time
     private float _timer;                                   // Timer before next spawn
     public bool CanSpawn;                                   // Can an enemy be spawned right now?
-    public int numberOfEnemies = 3;                         // Number of enemies to be spawned this round
+    public int NumberOfEnemies = 3;                         // Number of enemies to be spawned this round
     private int _spawnCount;                                // Number of enemies that have spawned so far
+    public bool _waveDefeated;
 
 	/// <summary>
     /// Called by Unity on object creation
@@ -30,7 +31,7 @@ public class EnemySpawner : MonoBehaviour {
             _nodesList.Add(t);
         }
 
-        CanSpawn = true;
+        CanSpawn = false;
         Enemies = new List<AbstractEnemy>();
         _spawnCount = 0;
     }
@@ -41,7 +42,7 @@ public class EnemySpawner : MonoBehaviour {
 	void Update ()
     {
         // If an enemy can be spawned, instantiate and add to the list of enemies
-		if(CanSpawn)
+		if(CanSpawn && !(_spawnCount >= NumberOfEnemies))
         {
             Enemies.Add(Instantiate(_enemyPrefab, transform.position, transform.rotation));
             Enemies[_spawnCount].SetNodeSystem(_nodesList);
@@ -52,13 +53,17 @@ public class EnemySpawner : MonoBehaviour {
             CanSpawn = false;
             return;
         }
-
-        // Timer to check when the next enemy can be spawned
-        _timer -= Time.deltaTime;
-        if(_timer <= 0f)
+        else if(!CanSpawn)
         {
-            _timer = _baseTime;
-            CanSpawn = true;
+            // Timer to check when the next enemy can be spawned
+            _timer -= Time.deltaTime;
+            if(_timer <= 0f)
+            {
+                _timer = _baseTime;
+                CanSpawn = true;
+            }
+            return;
         }
+
 	}
 }

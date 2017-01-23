@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.UI;
 
 /// <summary>
 /// All towers will extend this class
@@ -9,11 +10,19 @@ public abstract class AbstractTower : MonoBehaviour {
     [SerializeField] protected LayerMask _enemMask;         // Enemy mask to collide with
     [SerializeField] protected Transform _transform;        // Towers transform
     [SerializeField] protected float _cooldownTime;         // How long this tower has to wait before it can fire again 
-
     [SerializeField] protected Rigidbody _bulletPrefab;     // Bullet reference to shoot
+
+    [SerializeField] private float _hp;                     // Towers current health
+    [SerializeField] private Slider _slider;                // Slider for the health UI
+    [SerializeField] private Image _image;                  // Image for the circle thingy
+
+    private Color _zeroHealthColour;                        // The zero health colour
+    private Color _fullHealthColour;                        // The full health colour
+    private const float _baseHealth = 100f;                 // Crystal base health
     private float _currentCooldownTime;                     // What is the current cooldown time @
-    private bool _onCooldown;                               // Is this tower on cooldown?
     private float radius;                                   // Firing range radius
+    private bool _dead;                                     // Is the crystal dead?
+    private bool _onCooldown;                               // Is this tower on cooldown?
 
     /// <summary>
     /// Called by Unity on onject creation
@@ -23,6 +32,11 @@ public abstract class AbstractTower : MonoBehaviour {
         radius = GetComponentInChildren<SphereCollider>().radius;
         _onCooldown = false;
         _currentCooldownTime = _cooldownTime;
+
+        _dead = false;
+        _zeroHealthColour = Color.red;
+        _fullHealthColour = Color.green;
+        SetHealthGUI();
 	}
 	
     /// <summary>
@@ -93,5 +107,25 @@ public abstract class AbstractTower : MonoBehaviour {
     public virtual void LaunchProjectile()
     {
         _onCooldown = true;
+    }
+
+    public void SetHealthGUI()
+    {
+        _slider.value = _hp;
+        _image.color = _image.color = Color.Lerp(_zeroHealthColour, _fullHealthColour, _hp / 100f);
+    }
+
+    public void Die()
+    {
+        _dead = false;
+        Destroy(gameObject);
+    }
+
+    public void TakeDamage(float damage)
+    {
+        _hp -= damage;
+        SetHealthGUI();
+
+        if (_hp <= 1f) Die();
     }
 }

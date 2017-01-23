@@ -8,13 +8,13 @@ using UnityEngine.UI;
 /// </summary>
 public class CrystalManager : MonoBehaviour {
 
-    private const float _baseHealth = 100f;     // Crystal base health
     [SerializeField] private float _hp;         // Crystals current health
     [SerializeField] private Slider _slider;    // Slider for the health UI
     [SerializeField] private Image _image;      // Image for the circle thingy
+
+    private const float _baseHealth = 100f;     // Crystal base health
     private Color _zeroHealthColour;            // The zero health colour
     private Color _fullHealthColour;            // The full health colour
-
     private bool _dead;                         // Is the crystal dead?
 
     /// <summary>
@@ -39,9 +39,9 @@ public class CrystalManager : MonoBehaviour {
     public void LoseHP(float lose)
     {
         _hp -= lose;
-
+        
         SetHealthGUI();
-        print("ow");
+        
         if (!_dead && _hp < 1f) Die();
     }
 
