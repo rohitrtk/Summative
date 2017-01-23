@@ -14,7 +14,7 @@ public class ChestSpawner : MonoBehaviour {
     /// <summary>
     /// Called by Unity on object creation
     /// </summary>
-	void Start ()
+	private void Start ()
     {
         Chests = new List<Chest>();
         _chestSpawns = GetComponentsInChildren<Transform>();

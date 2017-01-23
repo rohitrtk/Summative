@@ -8,8 +8,8 @@ using UnityEngine;
 public abstract class AbstractGameManager : MonoBehaviour {
 
     // States
-    protected enum State { Menu, Game , Setup, Options }
-    protected State _gameState;
+    protected enum State { Menu, Game , Setup, Options }           // List of gamestates 
+    protected State _gameState;                                    // Current gamestate
 
     // Players
     [SerializeField] protected Player _player;                     // Player prefab
@@ -81,6 +81,10 @@ public abstract class AbstractGameManager : MonoBehaviour {
         StartCoroutine(GameLoop());
     }
 
+    /// <summary>
+    /// Method for the menu state
+    /// </summary>
+    /// <returns></returns>
     private IEnumerator Menu()
     {
         while(_gameState == State.Menu)
@@ -93,6 +97,10 @@ public abstract class AbstractGameManager : MonoBehaviour {
         yield return new WaitForSeconds(0.1f);
     }
 
+    /// <summary>
+    /// Method to initialize everything
+    /// </summary>
+    /// <returns></returns>
     private IEnumerator Launch()
     {
         // Set player up
@@ -146,7 +154,10 @@ public abstract class AbstractGameManager : MonoBehaviour {
         // While it is the combat phase
         while (_combatPhase)
         {
-            Timer();
+
+            _es.CombatPhase = true; ;
+
+            if (_es._waveDefeated) _combatPhase = false;
 
             yield return null;
         }
@@ -182,7 +193,10 @@ public abstract class AbstractGameManager : MonoBehaviour {
         return _roundNumber;
     }
 
-    // Gets the player prefab
+    /// <summary>
+    /// Gets the player prefab
+    /// </summary>
+    /// <returns></returns>
     public Player GetPlayer()
     {
         return _player;

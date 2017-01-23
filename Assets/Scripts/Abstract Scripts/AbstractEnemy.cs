@@ -14,17 +14,21 @@ public abstract class AbstractEnemy : MonoBehaviour {
     [HideInInspector] public AbstractTower TowerInstance;             // Tower instance to target
     [SerializeField] private Transform _target;         // Target destination
     [SerializeField] private float _attackCooldown;     // How long to wait between attacks
+    public int AssignedNumber;
+    public bool _dead;
     private NavMeshAgent _nma;                          // Navmeshagent component
 
     private List<Transform> _nodes;                     // List of nodes                 
     private int _nodeCount;                             // How many nodes has this object pased
-    private Transform _targetNode;
+    private Transform _targetNode;                      // The node to move to
 
     private List<Transform> _closedNodes;               // List of nodes that this object has collided with
     private bool _canMove;                              // Can this object move?
-    private bool _attacking;
-    private float _damage;
-    private float _currentCooldownTime;
+    private bool _attacking;                            // Is this object attacking right now?
+    private float _damage;                              // Object damage
+    private float _currentCooldownTime;                 // Cooldown time between attacks
+
+    private List<AbstractEnemy> _enemiesReference;      // List of enemies to reference on death
 
     /// <summary>
     /// Called by Unity on object creation
@@ -39,6 +43,7 @@ public abstract class AbstractEnemy : MonoBehaviour {
         _closedNodes = new List<Transform>();
         //_targetNode = _nodes[0];
         _currentCooldownTime = 0;
+        _dead = false;
 	}
 
     /// <summary>
@@ -55,7 +60,7 @@ public abstract class AbstractEnemy : MonoBehaviour {
     /// </summary>
     public virtual void Update ()
     {
-        if (_target.position == null) return;
+        //if (_target.position == null) return;
 
         AbstractTower[] ats = FindObjectsOfType(typeof(AbstractTower))
             as AbstractTower[];
@@ -76,14 +81,17 @@ public abstract class AbstractEnemy : MonoBehaviour {
     /// <param name="other"></param>
     public virtual void OnTriggerEnter(Collider other)
     {
+        // Node
         if(other.gameObject.layer == 13)
         {
             _canMove = false;
             _closedNodes.Add(other.transform);
         }
+        // Enemy
         else if(other.gameObject.layer == 14)
         {
-            Destroy(gameObject);
+            _dead = true;
+            Destroy(other.gameObject);  // Destroy the bullet afterwards
         }
     }
 
@@ -96,17 +104,25 @@ public abstract class AbstractEnemy : MonoBehaviour {
         _target = t;
     }
 
+    /// <summary>
+    /// Called to check if this class can attack a target
+    /// </summary>
+    /// <param name="t"></param>
+    /// <param name="distance"></param>
+    /// <returns></returns>
     private bool Attack(Transform t, float distance)
     {
+        // If the distance between this class instane and target is less than x distance...
         if (Vector3.Distance(transform.position, t.position) < distance)
         {
             _target = t;
             _nma.SetDestination(_target.position);
-            _nma.stoppingDistance = distance;
+            _nma.stoppingDistance = distance - 0.5f;
 
+            // If we are not attacking
             if(!_attacking)
             {
-                // player
+                // Player
                 if (t.gameObject.layer == 8)
                 {
                     PlayerHealth ph = PlayerInstance.GetComponent<PlayerHealth>();
@@ -136,8 +152,12 @@ public abstract class AbstractEnemy : MonoBehaviour {
                     _currentCooldownTime = _attackCooldown;
                 }
             }
+
+            //  Return true if in range
             return true;
         }
+
+        // Return false if not in range
         return false;
     }
 
@@ -146,21 +166,21 @@ public abstract class AbstractEnemy : MonoBehaviour {
     /// </summary>
     private void Path()
     {
+        // Check for attackable objects, if true, run their code and don't run the code in this method
         if (Attack(PlayerInstance.transform, 2f) 
-            || Attack(CrystalInstance.transform, 5f)
-            || Attack(TowerInstance.transform, 3f)) return;
-
+           || Attack(CrystalInstance.transform, 5f)
+           || Attack(TowerInstance.transform, 3f)) return;
+        
+        // Default stopping distance to 0 so it can go to nodes
         _nma.stoppingDistance = 0f;
+
+        FindNode();
 
         if (_canMove)
         {
             _target = _targetNode;
             _nma.SetDestination(_target.position);
-
-            return;
         }
-
-        FindNode();
     }
 
     /// <summary>

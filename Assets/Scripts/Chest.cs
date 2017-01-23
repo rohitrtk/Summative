@@ -11,7 +11,7 @@ public class Chest : MonoBehaviour {
     /// <summary>
     /// Called by Unity on object creation
     /// </summary>
-	void Start ()
+	private void Start ()
     {
         _amountOfMp = (int) Random.Range(10f, 50f);
     }

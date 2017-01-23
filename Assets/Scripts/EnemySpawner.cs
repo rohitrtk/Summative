@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System.Linq;
+using System.Collections.Generic;
 using UnityEngine;
 
 /// <summary>
@@ -6,22 +7,25 @@ using UnityEngine;
 /// </summary>
 public class EnemySpawner : MonoBehaviour {
 
-    public GameObject CrystalInstance;
-    public Player PlayerInstance;
     [SerializeField] private AbstractEnemy _enemyPrefab;    // Abstract enemy prefab
-    public List<AbstractEnemy> Enemies;                     // List of enemies
-    private List<Transform> _nodesList;                     // The node list attached to the spawner object
     [SerializeField] private float _baseTime;               // Base spawn time
-    private float _timer;                                   // Timer before next spawn
+    [HideInInspector] public int NumberOfEnemies = 3;       // Number of enemies to be spawned this round
+    public GameObject CrystalInstance;                      // Instance of crystal to target
+    public Player PlayerInstance;                           // Instance of player to target
+    public List<AbstractEnemy> Enemies;                     // List of enemies
+    public bool CombatPhase;                                // Is there a combat phase right now?
     public bool CanSpawn;                                   // Can an enemy be spawned right now?
-    public int NumberOfEnemies = 3;                         // Number of enemies to be spawned this round
-    private int _spawnCount;                                // Number of enemies that have spawned so far
     public bool _waveDefeated;
+
+    private List<Transform> _nodesList;                     // The node list attached to the spawner object
+    private float _timer;                                   // Timer before next spawn
+    private int _spawnCount;                                // Number of enemies that have spawned so far
+    private int _deathCount;
 
 	/// <summary>
     /// Called by Unity on object creation
     /// </summary>
-	void Awake ()
+	private void Awake ()
     {
         _timer = _baseTime;
         _nodesList = new List<Transform>();
@@ -39,16 +43,19 @@ public class EnemySpawner : MonoBehaviour {
 	/// <summary>
     /// Called by Unity once per frame
     /// </summary>
-	void Update ()
+	private void Update ()
     {
+        if (!CombatPhase) return;
+
         // If an enemy can be spawned, instantiate and add to the list of enemies
-		if(CanSpawn && !(_spawnCount >= NumberOfEnemies))
+		if(CanSpawn && _spawnCount < NumberOfEnemies)
         {
             Enemies.Add(Instantiate(_enemyPrefab, transform.position, transform.rotation));
             Enemies[_spawnCount].SetNodeSystem(_nodesList);
             Enemies[_spawnCount].PlayerInstance = PlayerInstance;
             Enemies[_spawnCount].CrystalInstance = CrystalInstance.gameObject;
-            
+            Enemies[_spawnCount].AssignedNumber = _spawnCount;
+
             _spawnCount++;
             CanSpawn = false;
             return;
@@ -65,5 +72,13 @@ public class EnemySpawner : MonoBehaviour {
             return;
         }
 
-	}
+        List<int> deadEnemies = new List<int>();
+        foreach (AbstractEnemy e in Enemies) if (e._dead) deadEnemies.Add(e.AssignedNumber);
+
+        foreach (int i in deadEnemies)
+        {
+            Destroy(Enemies[i].gameObject);
+            Enemies.RemoveAt(i);
+        }
+    }
 }

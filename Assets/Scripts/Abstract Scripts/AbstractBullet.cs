@@ -5,10 +5,10 @@
 /// </summary>
 public abstract class AbstractBullet : MonoBehaviour {
 
-    [SerializeField] protected LayerMask _playerMask;    // Player mask to collide with
-    [SerializeField] protected LayerMask _enemMask;      // Enemy mask to collide with
+    [SerializeField] protected LayerMask _playerMask;   // Player mask to collide with
+    [SerializeField] protected LayerMask _enemMask;     // Enemy mask to collide with
     [SerializeField] protected float _damage;           // Damage bullet will do
-    [SerializeField] protected float _destroyTime;      // If the bullet doesn't hit anything, despawn after this time
+    protected float _destroyTime = 2f;                  // If the bullet doesn't hit anything, despawn after this time
     [SerializeField] protected float _radius = 0.5f;    // Radius to collide with
     protected float _waitTime;                          // Time to wait before bullet collision
 
@@ -17,7 +17,6 @@ public abstract class AbstractBullet : MonoBehaviour {
     /// </summary>
     public virtual void Start ()
     {
-        _waitTime = _destroyTime / 2;
         Destroy(gameObject, _destroyTime);
 	}
 
@@ -26,7 +25,6 @@ public abstract class AbstractBullet : MonoBehaviour {
     /// </summary>
     public virtual void Update ()
     {
-        _waitTime -= Time.deltaTime;
 	}
 
     /// <summary>
@@ -35,7 +33,6 @@ public abstract class AbstractBullet : MonoBehaviour {
     /// <param name="other"></param>
     public virtual void OnTriggerEnter(Collider other)
     {
-        if(_waitTime <= 0f) Destroy(gameObject);
     }
 
     /// <summary>

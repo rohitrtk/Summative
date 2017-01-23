@@ -65,7 +65,7 @@ public abstract class AbstractTower : MonoBehaviour {
                     Vector3 direction = Vector3.RotateTowards(transform.position,
                         rotationToTarget, 100f, 0.0f);
                     
-                    transform.GetChild(3).rotation = Quaternion.LookRotation(direction);
+                    transform.GetChild(1).rotation = Quaternion.LookRotation(direction);
 
                     LaunchProjectile();
 
@@ -111,18 +111,28 @@ public abstract class AbstractTower : MonoBehaviour {
         _onCooldown = true;
     }
 
+    /// <summary>
+    /// Sets the health UI for the tower
+    /// </summary>
     public void SetHealthGUI()
     {
         _slider.value = _hp;
         _image.color = _image.color = Color.Lerp(_zeroHealthColour, _fullHealthColour, _hp / 100f);
     }
 
+    /// <summary>
+    /// Called when the tower dies
+    /// </summary>
     public void Die()
     {
         _dead = false;
         Destroy(gameObject);
     }
 
+    /// <summary>
+    /// Called when the tower takes damage
+    /// </summary>
+    /// <param name="damage"></param>
     public void TakeDamage(float damage)
     {
         _hp -= damage;
@@ -130,7 +140,11 @@ public abstract class AbstractTower : MonoBehaviour {
 
         if (_hp <= 1f) Die();
     }
-
+     
+    /// <summary>
+    /// Used to get the cost of the tower
+    /// </summary>
+    /// <returns></returns>
     public float GetCost()
     {
         return _cost;

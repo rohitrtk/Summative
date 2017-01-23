@@ -26,7 +26,7 @@ public abstract class AbstractPlayer : MonoBehaviour {
 
     protected Level1Manager _gm;                            // Level1Manager object
 
-    [SerializeField] AbstractTower _towerPrefab;            // Tower prefab
+    [SerializeField] protected AbstractTower _towerPrefab;            // Tower prefab
     protected List<AbstractTower> _towers;                  // List of this players towers
 
     /// <summary>

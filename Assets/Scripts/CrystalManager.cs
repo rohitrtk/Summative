@@ -18,7 +18,7 @@ public class CrystalManager : MonoBehaviour {
     /// <summary>
     /// Called by Unity on object creation
     /// </summary>
-	void Awake ()
+	private void Awake ()
     {
         if (_hp > _baseHealth) _hp = _baseHealth;
 
