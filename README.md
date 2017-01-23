@@ -6,7 +6,7 @@ there's the combat phase where monsters spawn and try to attack some sort of obj
 ### Requirements
 #### Planning X/0
 - [x] Concept Brief
-- [ ] UML diagram 
+- [x] UML diagram 
 
 #### Final Product X/5
 - [x] Makes use of an inherited abstract class
@@ -23,9 +23,9 @@ there's the combat phase where monsters spawn and try to attack some sort of obj
 #### Optional Criteria X/4
 - [x] GUI
 - [x] More complex visuals
-- [ ] AI
+- [x] AI
 - [ ] Networking
-- [ ] Sound
+- [x] Sound
 - [x] Completely new project
 - [x] New models
 - [ ] Complicated data structures
