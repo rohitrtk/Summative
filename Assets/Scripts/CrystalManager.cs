@@ -13,8 +13,9 @@ public class CrystalManager : MonoBehaviour {
     private const float _baseHealth = 100f;     // Crystal base health
     private Color _zeroHealthColour;            // The zero health colour
     private Color _fullHealthColour;            // The full health colour
-    private bool _dead;                         // Is the crystal dead?
 
+    public bool _dead;                         // Is the crystal dead?
+   
     /// <summary>
     /// Called by Unity on object creation
     /// </summary>
@@ -58,7 +59,6 @@ public class CrystalManager : MonoBehaviour {
     private void Die()
     {
         _dead = true;
-        gameObject.SetActive(false);
     }
 
     /// <summary>

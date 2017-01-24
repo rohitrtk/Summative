@@ -8,8 +8,8 @@ using UnityEngine;
 public abstract class AbstractGameManager : MonoBehaviour {
 
     // States
-    protected enum State { Menu, Game , Setup, Options }           // List of gamestates 
-    protected State _gameState;                                    // Current gamestate
+    public enum State { Menu, Game , Setup, Options, Lose }           // List of gamestates 
+    public State _gameState;                                            // Current gamestate
 
     // Players
     [SerializeField] protected Player _player;                     // Player prefab
@@ -70,7 +70,12 @@ public abstract class AbstractGameManager : MonoBehaviour {
     /// <returns></returns>
     private IEnumerator GameLoop()
     {
-        if(_gameState == State.Menu || _gameState == State.Setup)
+        //print(_gameState);
+        if (_gameState == State.Lose)
+        {
+            yield return StartCoroutine(Lose());
+        }
+        else if(_gameState == State.Menu || _gameState == State.Setup)
         {
             yield return StartCoroutine(Menu());
             yield return StartCoroutine(Launch());
@@ -80,7 +85,6 @@ public abstract class AbstractGameManager : MonoBehaviour {
             yield return StartCoroutine(BuildPhase());
             yield return StartCoroutine(CombatPhase());
         }
-
         // Infinite game loop
         StartCoroutine(GameLoop());
     }
@@ -91,12 +95,15 @@ public abstract class AbstractGameManager : MonoBehaviour {
     /// <returns></returns>
     private IEnumerator Menu()
     {
-        while(_gameState == State.Menu)
+        GameObject.Find("HUD").SetActive(true);
+        //GameObject.Find("LoseHUD").SetActive(false);
+        while (_gameState == State.Menu)
         {
             yield return null;
         }
 
         GameObject.Find("HUD").SetActive(false);
+        //GameObject.Find("HUD").SetActive(false);
 
         yield return new WaitForSeconds(0.1f);
     }
@@ -117,7 +124,7 @@ public abstract class AbstractGameManager : MonoBehaviour {
 
         // Set enemies up
         _es = GetComponentInChildren<EnemySpawner>();
-        _es.enabled = true;
+        //_es.enabled = true;
         _es.CrystalInstance = _crystalInstance;
         _es.PlayerInstance = _playerInstance;
 
@@ -137,12 +144,13 @@ public abstract class AbstractGameManager : MonoBehaviour {
     private IEnumerator BuildPhase()
     {
         _es.enabled = false;
+        _es._waveDefeated = false;
         _es._deathCount = 0;
+   
         // While it is the build phase
         while (!_combatPhase)
         {
             Timer();
-
             yield return null; // Don't leave method
         }
 
@@ -158,15 +166,29 @@ public abstract class AbstractGameManager : MonoBehaviour {
     private IEnumerator CombatPhase()
     {
         _es.enabled = true;
+        _es._spawnCount = 0;
+        _es.Enemies.Clear();
+        _enemyFunction = _roundNumber * (int)Difficulty.Normal + 3f;
         _es.NumberOfEnemies = (int)_enemyFunction;
         // While it is the combat phase
         while (_combatPhase)
         {
+            CheckGameOver();
             if (_es._waveDefeated) _combatPhase = false;
             yield return null;
         }
-
         yield return new WaitForSeconds(BufferTime); // Don't leave
+    }
+
+    private IEnumerator Lose()
+    {
+        //GameObject.Find("LoseHUD").SetActive(true);
+        while (_gameState == State.Lose)
+        {
+            yield return null;
+        }
+
+        yield return new WaitForSeconds(0.1f);
     }
 
     #endregion
@@ -204,5 +226,19 @@ public abstract class AbstractGameManager : MonoBehaviour {
     public Player GetPlayer()
     {
         return _player;
+    }
+
+    /// <summary>
+    /// Checks if the game should be over
+    /// </summary>
+    private void CheckGameOver()
+    {
+        CrystalManager cm = _crystalInstance.GetComponent<CrystalManager>();
+        if (cm._dead)
+        {
+            _crystalInstance.SetActive(false);
+            _gameState = State.Lose;
+            _combatPhase = false;
+        }
     }
 }

@@ -14,6 +14,7 @@ public abstract class AbstractEnemy : MonoBehaviour {
     [HideInInspector] public AbstractTower TowerInstance;             // Tower instance to target
     [SerializeField] private Transform _target;         // Target destination
     [SerializeField] private float _attackCooldown;     // How long to wait between attacks
+    public EnemySpawner _es;                            // Enemy spawner reference
     public int AssignedNumber;
     public bool _dead;
     private NavMeshAgent _nma;                          // Navmeshagent component
@@ -98,7 +99,7 @@ public abstract class AbstractEnemy : MonoBehaviour {
 
     public virtual void OnDestroy()
     {
-        EnemySpawner _es = GameObject.Find("EnemySpawnTransform").GetComponent<EnemySpawner>();
+        if (!_es) return;
         _es._deathCount++;
     }
 
