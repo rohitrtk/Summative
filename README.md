@@ -4,7 +4,7 @@ where the player goes around the map collecting some sort of currency and using 
 there's the combat phase where monsters spawn and try to attack some sort of object on the map. Read the CONCEPT file for the Concept Brief.
 
 ### Requirements
-#### Planning X/0
+#### Planning X/2
 - [x] Concept Brief
 - [x] UML diagram 
 
@@ -12,8 +12,8 @@ there's the combat phase where monsters spawn and try to attack some sort of obj
 - [x] Makes use of an inherited abstract class
 - [x] Makes use of a list or array of objects
 - [x] Appropriate internal documentation
-- [ ] Be a complete program of appropriate complexity
-- [ ] Meets or exceeds the scope set by the concept brief
+- [x] Be a complete program of appropriate complexity
+- [x] Meets or exceeds the scope set by the concept brief
 
 #### Unity Requirements X/3
 - [x] Include at least 2 unique & new game components w/ unique & new code
